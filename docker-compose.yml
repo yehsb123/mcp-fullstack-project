@@ -1,0 +1,7 @@
+# Docker Compose 설정
+# 1주차: PostgreSQL만 띄우기
+# 5주차: FastAPI + PostgreSQL + ChromaDB 전체 통합
+
+# TODO: PostgreSQL 서비스 (1주차)
+# TODO: FastAPI 서비스 (5주차)
+# TODO: ChromaDB 서비스 (5주차)

@@ -1,0 +1,25 @@
+# Python 의존성
+# 주차별로 추가해 나갈 것
+
+# 1주차: Backend
+# fastapi
+# uvicorn
+# sqlalchemy
+# psycopg2-binary
+# python-dotenv
+
+# 1주차: Frontend
+# streamlit
+# requests
+
+# 2주차: MCP
+# mcp
+
+# 3주차: RAG
+# chromadb
+# sentence-transformers
+
+# 3주차: Agent
+# langgraph
+# langchain-anthropic
+# langchain-core
