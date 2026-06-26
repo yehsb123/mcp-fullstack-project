@@ -91,8 +91,8 @@ mcp-fullstack-project/
 │   ├── docs/                   # 보안 정책 문서 (md 파일)
 │   └── scripts/                # 임베딩 + 벡터DB 적재 스크립트
 │
-├── frontend/                   # 프론트엔드 (Streamlit 또는 React)
-│   └── src/
+├── frontend/                   # Streamlit 프론트엔드
+│   └── app.py                  # Streamlit 메인 앱
 │
 ├── Dockerfile                  # 앱 컨테이너 이미지
 ├── docker-compose.yml          # FastAPI + PostgreSQL + ChromaDB 통합
@@ -100,6 +100,17 @@ mcp-fullstack-project/
 ├── requirements.txt            # Python 의존성
 └── README.md
 ```
+
+---
+
+## 브랜치 전략
+
+| 브랜치 | 용도 |
+|--------|------|
+| `main` | 배포용 (안정 버전만 머지) |
+| `dev` | 개발용 (기능 구현은 여기서) |
+
+**작업 흐름**: `dev`에서 개발 → 동작 확인 → `main`에 머지
 
 ---
 
