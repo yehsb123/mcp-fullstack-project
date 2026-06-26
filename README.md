@@ -242,7 +242,6 @@ mcp-fullstack-project/
 
 ## 참고 레퍼런스
 
-- [skein MCP 서버 구조](https://github.com/amamov/skein) — MCP 서버 구성 구조(폴더, Tool 정의 패턴, 서버-백엔드 연결 방식)만 참고. 실제 코드/로직은 직접 구현할 것
 - [FastAPI 공식 문서](https://fastapi.tiangolo.com/)
 - [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
 - [LangGraph 공식 문서](https://langchain-ai.github.io/langgraph/)
