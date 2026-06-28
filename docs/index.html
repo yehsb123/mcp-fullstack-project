@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AccessGuard — 프로젝트 설명</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.8;
+        }
+        .slide {
+            min-height: 100vh;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: 1px solid #1e293b;
+        }
+        .cover { text-align: center; }
+        .cover h1 {
+            font-size: 56px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+        .cover .subtitle { font-size: 24px; color: #94a3b8; margin-bottom: 40px; }
+        .cover .meta { font-size: 16px; color: #64748b; }
+        h2 { font-size: 36px; font-weight: 700; margin-bottom: 32px; color: #f8fafc; }
+        h2 .accent { color: #60a5fa; }
+        h3 { font-size: 22px; font-weight: 600; margin: 28px 0 12px; color: #cbd5e1; }
+        .oneliner {
+            font-size: 20px; color: #94a3b8;
+            border-left: 4px solid #60a5fa;
+            padding-left: 20px; margin-bottom: 32px;
+        }
+        .term {
+            display: inline-block; background: #334155; color: #60a5fa;
+            padding: 2px 10px; border-radius: 6px; font-size: 14px; font-weight: 600;
+        }
+        .term-box {
+            background: #1e293b; border-radius: 12px; padding: 20px 28px;
+            margin: 12px 0; border-left: 4px solid #60a5fa;
+        }
+        .term-box strong { color: #60a5fa; }
+        .term-box p { color: #94a3b8; font-size: 15px; margin-top: 4px; }
+        .flow {
+            display: flex; align-items: center; gap: 0;
+            margin: 32px 0; flex-wrap: wrap; justify-content: center;
+        }
+        .flow-item {
+            background: #1e293b; border: 2px solid #334155; border-radius: 12px;
+            padding: 20px 28px; text-align: center; min-width: 150px;
+        }
+        .flow-item.highlight { border-color: #60a5fa; background: #1e3a5f; }
+        .flow-item .label { font-size: 12px; color: #64748b; margin-bottom: 4px; }
+        .flow-item .name { font-size: 17px; font-weight: 600; }
+        .flow-arrow { font-size: 28px; color: #475569; padding: 0 8px; }
+        .cards {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px; margin: 24px 0;
+        }
+        .card {
+            background: #1e293b; border-radius: 12px; padding: 24px; border: 1px solid #334155;
+        }
+        .card .card-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; color: #f8fafc; }
+        .card .card-tech { font-size: 13px; color: #60a5fa; margin-bottom: 10px; }
+        .card .card-desc { font-size: 14px; color: #94a3b8; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th {
+            text-align: left; padding: 12px 20px; background: #1e293b;
+            color: #60a5fa; font-size: 14px; font-weight: 600; border-bottom: 2px solid #334155;
+        }
+        td { padding: 12px 20px; border-bottom: 1px solid #1e293b; font-size: 14px; color: #cbd5e1; }
+        tr:hover td { background: #1e293b40; }
+        .highlight-box {
+            background: linear-gradient(135deg, #1e3a5f, #1e293b);
+            border: 1px solid #60a5fa40; border-radius: 12px; padding: 24px; margin: 20px 0;
+        }
+        .highlight-box p { font-size: 16px; color: #cbd5e1; }
+        .graph-flow { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 24px 0; }
+        .graph-node {
+            background: #1e293b; border: 2px solid #334155; border-radius: 10px;
+            padding: 12px 28px; font-size: 15px; font-weight: 600; text-align: center; min-width: 240px;
+        }
+        .graph-node.start { border-color: #34d399; color: #34d399; }
+        .graph-node.process { border-color: #60a5fa; color: #60a5fa; }
+        .graph-node.decision { border-color: #fbbf24; color: #fbbf24; }
+        .graph-node.action { border-color: #a78bfa; color: #a78bfa; }
+        .graph-node.end { border-color: #f87171; color: #f87171; }
+        .graph-arrow { font-size: 20px; color: #475569; padding: 4px 0; }
+        .graph-branch { display: flex; gap: 16px; justify-content: center; margin: 8px 0; }
+        .graph-branch .graph-node { min-width: 170px; font-size: 13px; }
+        .branch-labels { display: flex; gap: 16px; justify-content: center; margin-bottom: 4px; }
+        .branch-label { font-size: 12px; color: #64748b; min-width: 170px; text-align: center; }
+
+        /* 와이어프레임 */
+        .wireframe {
+            background: #1e293b; border: 2px solid #334155; border-radius: 12px;
+            padding: 0; overflow: hidden; max-width: 520px; margin: 16px auto;
+        }
+        .wf-header {
+            background: #334155; padding: 10px 16px; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        .wf-header .wf-title { font-size: 14px; font-weight: 600; color: #e2e8f0; }
+        .wf-header .wf-badge {
+            font-size: 11px; background: #60a5fa; color: #0f172a;
+            padding: 2px 8px; border-radius: 4px; font-weight: 600;
+        }
+        .wf-body { padding: 20px; }
+        .wf-input {
+            background: #0f172a; border: 1px solid #475569; border-radius: 8px;
+            padding: 10px 14px; margin: 8px 0; color: #94a3b8; font-size: 13px; width: 100%;
+        }
+        .wf-btn {
+            background: #60a5fa; color: #0f172a; border: none; border-radius: 8px;
+            padding: 10px 20px; font-weight: 600; font-size: 13px; margin-top: 8px; cursor: pointer;
+        }
+        .wf-btn.secondary { background: #334155; color: #e2e8f0; }
+        .wf-btn.danger { background: #f87171; color: #0f172a; }
+        .wf-table { width: 100%; margin-top: 12px; }
+        .wf-table th {
+            font-size: 12px; padding: 8px 10px; background: #0f172a;
+            color: #64748b; border-bottom: 1px solid #334155;
+        }
+        .wf-table td {
+            font-size: 12px; padding: 8px 10px; border-bottom: 1px solid #1e293b40; color: #cbd5e1;
+        }
+        .wf-status {
+            display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
+        }
+        .wf-status.pending { background: #fbbf2420; color: #fbbf24; }
+        .wf-status.approved { background: #34d39920; color: #34d399; }
+        .wf-status.rejected { background: #f8717120; color: #f87171; }
+        .wf-chat { margin-top: 12px; }
+        .wf-chat-bubble {
+            background: #0f172a; border-radius: 10px; padding: 10px 14px;
+            margin: 6px 0; font-size: 13px; color: #cbd5e1; max-width: 85%;
+        }
+        .wf-chat-bubble.user { background: #1e3a5f; margin-left: auto; color: #e2e8f0; }
+        .wf-chat-bubble.agent { background: #0f172a; }
+        .wf-label { font-size: 13px; color: #64748b; margin-bottom: 4px; }
+        .wf-row { display: flex; gap: 8px; align-items: center; }
+
+        .screen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+
+        @media print {
+            .slide { page-break-after: always; min-height: auto; padding: 40px; }
+            body { background: white; color: #1e293b; }
+            .card, .wireframe, .term-box { background: #f8fafc; border-color: #e2e8f0; }
+            h2, .card .card-title { color: #0f172a; }
+            .cover h1 { -webkit-text-fill-color: #2563eb; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 슬라이드 1: 커버 -->
+<div class="slide cover">
+    <h1>AccessGuard</h1>
+    <p class="subtitle">AI 기반 접근 권한 자동 심사 시스템</p>
+    <p class="meta">프로젝트 소개 · 아키텍처 · 화면 설계</p>
+</div>
+
+<!-- 슬라이드 2: 완성품 먼저 보여주기 -->
+<div class="slide">
+    <h2><span class="accent">01.</span> 완성되면 이렇게 동작합니다</h2>
+    <p class="oneliner">먼저 최종 결과물부터 봅시다</p>
+
+    <table>
+        <tr><th>단계</th><th>사용자가 보는 것</th><th>시스템이 하는 것</th></tr>
+        <tr>
+            <td>①</td>
+            <td>채팅창에 "고객 DB 접근 권한 주세요" 입력</td>
+            <td>화면에서 서버로 메시지 전달</td>
+        </tr>
+        <tr>
+            <td>②</td>
+            <td>(잠시 대기...)</td>
+            <td>AI가 신청자 정보 확인</td>
+        </tr>
+        <tr>
+            <td>③</td>
+            <td>(잠시 대기...)</td>
+            <td>AI가 보안 정책 문서에서 관련 규정 검색</td>
+        </tr>
+        <tr>
+            <td>④</td>
+            <td>(잠시 대기...)</td>
+            <td>AI 판단: "고객 DB는 민감 데이터 → 팀장 승인 필요"</td>
+        </tr>
+        <tr>
+            <td>⑤</td>
+            <td>"고객 DB는 민감 데이터(Level 2)라<br>팀장 승인이 필요합니다.<br>팀장님께 승인 요청을 보냈습니다."</td>
+            <td>AI가 팀장에게 알림 발송</td>
+        </tr>
+        <tr>
+            <td>⑥</td>
+            <td>관리자 화면에서 팀장이 [승인] 클릭</td>
+            <td>권한 부여 + 전체 과정 기록 저장</td>
+        </tr>
+    </table>
+
+    <div class="highlight-box">
+        <p>이 전체 흐름을 5주에 걸쳐 하나씩 만들어갑니다.</p>
+    </div>
+</div>
+
+<!-- 슬라이드 3: 기초 용어 -->
+<div class="slide">
+    <h2><span class="accent">02.</span> 먼저 알아야 할 기본 개념</h2>
+    <p class="oneliner">이 프로젝트에서 계속 나오는 용어들입니다</p>
+
+    <div class="term-box">
+        <strong>Frontend (프론트엔드)</strong>
+        <p>사용자가 직접 보고 클릭하는 화면. 이 프로젝트에서는 Streamlit이라는 도구로 만듭니다.</p>
+    </div>
+    <div class="term-box">
+        <strong>Backend (백엔드)</strong>
+        <p>화면 뒤에서 데이터를 처리하는 서버. 화면에서 "신청" 버튼을 누르면, 백엔드가 그 데이터를 받아서 저장합니다. FastAPI로 만듭니다.</p>
+    </div>
+    <div class="term-box">
+        <strong>API (Application Programming Interface)</strong>
+        <p>프론트엔드와 백엔드가 대화하는 방식. 예: 화면이 "신청 목록 줘"라고 요청하면, 백엔드가 데이터를 돌려줍니다. 이 요청/응답 규칙이 API입니다.</p>
+    </div>
+    <div class="term-box">
+        <strong>Database (데이터베이스, DB)</strong>
+        <p>모든 데이터가 저장되는 곳. 엑셀 시트처럼 표(테이블) 형태로 데이터를 관리합니다. PostgreSQL을 사용합니다.</p>
+    </div>
+    <div class="term-box">
+        <strong>Docker (도커)</strong>
+        <p>프로그램을 "상자"에 넣어서 어디서든 똑같이 실행되게 해주는 도구. 내 PC에서 되면 서버에서도 됩니다.</p>
+    </div>
+</div>
+
+<!-- 슬라이드 4: AI 용어 -->
+<div class="slide">
+    <h2><span class="accent">03.</span> AI 관련 개념</h2>
+    <p class="oneliner">이 프로젝트의 핵심인 AI 용어들입니다</p>
+
+    <div class="term-box">
+        <strong>Agent (에이전트)</strong>
+        <p>스스로 판단하고 행동하는 AI. 단순히 질문에 답하는 게 아니라, 상황을 보고 → 필요한 도구를 골라서 → 실행까지 합니다.</p>
+    </div>
+    <div class="term-box">
+        <strong>LangGraph (랭그래프)</strong>
+        <p>Agent의 판단 과정을 "흐름도(그래프)"로 만드는 도구. 접수 → 검색 → 판단 → 실행 같은 단계를 코드로 정의합니다.</p>
+    </div>
+    <div class="term-box">
+        <strong>RAG (Retrieval-Augmented Generation)</strong>
+        <p>AI가 답변하기 전에 관련 문서를 먼저 검색하는 방식. "정책 문서가 100개인데, 이 신청과 관련된 정책만 찾아서 AI에게 보여주는 것"입니다.</p>
+    </div>
+    <div class="term-box">
+        <strong>MCP (Model Context Protocol)</strong>
+        <p>AI가 외부 도구를 호출하는 표준 규격. Agent가 "권한을 승인해줘"라고 판단하면, MCP Tool이 실제로 DB에 승인 처리를 합니다.</p>
+    </div>
+    <div class="term-box">
+        <strong>LLM (Large Language Model)</strong>
+        <p>ChatGPT, Claude 같은 대규모 언어 모델. 이 프로젝트에서는 Claude가 판단의 "두뇌" 역할을 합니다.</p>
+    </div>
+</div>
+
+<!-- 슬라이드 5: 큰 그림 -->
+<div class="slide">
+    <h2><span class="accent">04.</span> 전체 구조 — 큰 그림</h2>
+    <p class="oneliner">6개 조각이 연결되어 하나의 시스템을 이룹니다</p>
+
+    <div class="flow">
+        <div class="flow-item">
+            <div class="label">사용자가 보는 화면</div>
+            <div class="name">Streamlit</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">
+            <div class="label">요청을 처리하는 서버</div>
+            <div class="name">FastAPI</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item highlight">
+            <div class="label">판단하는 AI</div>
+            <div class="name">LangGraph Agent</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">
+            <div class="label">AI가 쓰는 도구</div>
+            <div class="name">MCP Server</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">
+            <div class="label">데이터 저장소</div>
+            <div class="name">PostgreSQL</div>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <p><strong>왜 이렇게 나누나?</strong> 화면, 서버, AI, 도구, DB를 각각 분리하면 한 부분을 고칠 때 다른 부분에 영향이 없습니다. 실무에서 프로그램을 만드는 표준 방식입니다.</p>
+    </div>
+
+    <h3>데이터가 흘러가는 순서</h3>
+    <table>
+        <tr><th>순서</th><th>누가</th><th>뭘 하나</th></tr>
+        <tr><td>①</td><td>Streamlit (화면)</td><td>"마케팅 대시보드 권한 주세요" 입력 → FastAPI에 전달</td></tr>
+        <tr><td>②</td><td>FastAPI (서버)</td><td>요청 받음 → LangGraph Agent 실행</td></tr>
+        <tr><td>③</td><td>Agent (접수)</td><td>MCP Tool로 신청자가 누군지 조회</td></tr>
+        <tr><td>④</td><td>Agent (검색)</td><td>RAG로 관련 보안 정책 문서 검색</td></tr>
+        <tr><td>⑤</td><td>Agent (판단)</td><td>Claude(LLM)가 정책 보고 "팀장 승인 필요" 결정</td></tr>
+        <tr><td>⑥</td><td>Agent (실행)</td><td>MCP Tool로 팀장에게 알림 발송</td></tr>
+        <tr><td>⑦</td><td>Agent (로깅)</td><td>판단 과정 전체를 DB에 기록</td></tr>
+        <tr><td>⑧</td><td>FastAPI → Streamlit</td><td>결과를 화면에 표시</td></tr>
+    </table>
+</div>
+
+<!-- 슬라이드 6: 각 조각 설명 -->
+<div class="slide">
+    <h2><span class="accent">05.</span> 각 조각이 하는 일</h2>
+
+    <div class="cards">
+        <div class="card">
+            <div class="card-title">Streamlit</div>
+            <div class="card-tech">화면 (Frontend)</div>
+            <div class="card-desc">사용자가 보고 클릭하는 부분. 신청 폼, 채팅창, 승인 목록 등을 보여줍니다. Python으로 만들 수 있어서 별도의 웹 기술을 배울 필요가 없습니다.</div>
+        </div>
+        <div class="card">
+            <div class="card-title">FastAPI</div>
+            <div class="card-tech">서버 (Backend)</div>
+            <div class="card-desc">화면에서 오는 요청을 받아서 처리합니다. "신청 저장해줘", "목록 줘", "AI한테 물어봐줘" 같은 요청의 진입점입니다.</div>
+        </div>
+        <div class="card">
+            <div class="card-title">LangGraph Agent</div>
+            <div class="card-tech">AI 두뇌 (LangGraph + Claude)</div>
+            <div class="card-desc">자연어를 이해하고, 정책을 검색하고, 판단하고, 도구를 호출합니다. 흐름도(그래프)에 따라 단계별로 실행됩니다.</div>
+        </div>
+        <div class="card">
+            <div class="card-title">RAG</div>
+            <div class="card-tech">문서 검색 (ChromaDB)</div>
+            <div class="card-desc">보안 정책 문서를 미리 저장해두고, 신청이 들어오면 관련된 정책만 골라서 Agent에게 넘깁니다.</div>
+        </div>
+        <div class="card">
+            <div class="card-title">MCP Server</div>
+            <div class="card-tech">AI의 도구 4개</div>
+            <div class="card-desc">Agent가 판단한 후 실제로 행동하는 도구들. 권한 신청, 조회, 승인, 알림 발송을 담당합니다.</div>
+        </div>
+        <div class="card">
+            <div class="card-title">PostgreSQL</div>
+            <div class="card-tech">데이터 저장소 (Database)</div>
+            <div class="card-desc">사용자, 권한 신청, 부여된 권한, AI 판단 이력 — 모든 데이터가 여기에 저장됩니다.</div>
+        </div>
+    </div>
+</div>
+
+<!-- 슬라이드 7: Agent 그래프 -->
+<div class="slide">
+    <h2><span class="accent">06.</span> Agent 판단 흐름 (LangGraph)</h2>
+    <p class="oneliner">Agent는 이 흐름도를 따라 단계별로 판단하고 행동합니다</p>
+
+    <div class="graph-flow">
+        <div class="graph-node start">① 신청 접수 — 신청자 정보 조회</div>
+        <div class="graph-arrow">↓</div>
+        <div class="graph-node process">② 정책 검색 — RAG로 관련 보안 정책 찾기</div>
+        <div class="graph-arrow">↓</div>
+        <div class="graph-node decision">③ 판단 — 승인? 조건부? 에스컬레이션?</div>
+        <div class="graph-arrow">↓</div>
+        <div class="branch-labels">
+            <span class="branch-label">Level 1 + 같은 부서</span>
+            <span class="branch-label">조건 충족 시</span>
+            <span class="branch-label">Level 2 이상</span>
+        </div>
+        <div class="graph-branch">
+            <div class="graph-node action">자동 승인 → 권한 부여</div>
+            <div class="graph-node action">조건부 승인 → 조건 제안</div>
+            <div class="graph-node action">에스컬레이션 → 담당자에게 전달</div>
+        </div>
+        <div class="graph-arrow">↓</div>
+        <div class="graph-node process">④ 알림 발송</div>
+        <div class="graph-arrow">↓</div>
+        <div class="graph-node end">⑤ 로그 기록 — 전체 판단 과정 저장</div>
+    </div>
+
+    <div class="highlight-box">
+        <p><strong>LangGraph란?</strong> 위 흐름도의 각 단계를 "노드(node)"라 부르고, 단계 간 연결을 "엣지(edge)"라 부릅니다. LangGraph는 이 흐름도를 코드로 만들어주는 도구입니다.</p>
+    </div>
+</div>
+
+<!-- 슬라이드 8: MCP Tool 4개 -->
+<div class="slide">
+    <h2><span class="accent">07.</span> MCP Tool 4개 — AI의 도구</h2>
+    <p class="oneliner">Agent가 판단한 후 실제 작업을 수행하는 도구들입니다</p>
+
+    <table>
+        <tr><th>도구 이름</th><th>하는 일</th><th>예시</th></tr>
+        <tr>
+            <td><strong>request_access</strong></td>
+            <td>권한 신청 접수</td>
+            <td>"김철수가 고객 DB 접근을 신청했습니다" → DB에 저장</td>
+        </tr>
+        <tr>
+            <td><strong>check_access</strong></td>
+            <td>현재 권한 조회</td>
+            <td>"김철수가 지금 갖고 있는 권한이 뭐지?" → DB에서 조회</td>
+        </tr>
+        <tr>
+            <td><strong>approve_access</strong></td>
+            <td>승인/반려 처리</td>
+            <td>"승인 → 김철수에게 고객 DB 읽기 권한 부여" → DB에 저장</td>
+        </tr>
+        <tr>
+            <td><strong>send_notification</strong></td>
+            <td>알림 발송</td>
+            <td>"팀장님, 김철수의 권한 신청이 있습니다" → 알림</td>
+        </tr>
+    </table>
+
+    <div class="highlight-box">
+        <p><strong>Agent ↔ MCP 연결 방식:</strong> Agent(LangGraph)는 MCP를 직접 호출하지 않습니다. MCP Tool을 LangGraph가 이해하는 형태로 감싸서(래핑) 등록하면, AI가 필요할 때 알아서 골라 씁니다.</p>
+    </div>
+</div>
+
+<!-- 슬라이드 9: DB 테이블 -->
+<div class="slide">
+    <h2><span class="accent">08.</span> DB 테이블 — 어떤 데이터를 저장하나</h2>
+    <p class="oneliner">엑셀 시트 4개라고 생각하면 됩니다</p>
+
+    <div class="cards">
+        <div class="card">
+            <div class="card-title">users (사용자)</div>
+            <div class="card-desc">이름, 이메일, 부서, 역할<br><span style="color:#64748b">예: 김철수, 마케팅팀, 일반 사용자</span></div>
+        </div>
+        <div class="card">
+            <div class="card-title">access_requests (신청)</div>
+            <div class="card-desc">누가, 어떤 시스템에, 왜 신청했는지 + 현재 상태<br><span style="color:#64748b">예: 김철수, 고객DB, 마케팅 분석용, 대기중</span></div>
+        </div>
+        <div class="card">
+            <div class="card-title">permissions (권한)</div>
+            <div class="card-desc">현재 부여된 권한 목록 + 만료일<br><span style="color:#64748b">예: 김철수, 사내위키, Level 1, ~2026.12.31</span></div>
+        </div>
+        <div class="card">
+            <div class="card-title">audit_logs (판단 이력)</div>
+            <div class="card-desc">AI가 어떤 정책을 보고, 뭘 근거로 판단했는지<br><span style="color:#64748b">예: "고객DB 정책 참고 → Level 2 → 팀장 승인 라우팅"</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- 슬라이드 10: 화면 설계 (와이어프레임) -->
+<div class="slide">
+    <h2><span class="accent">09.</span> 화면 설계 — 이런 화면들을 만듭니다</h2>
+    <p class="oneliner">총 5개 화면을 주차별로 만들어갑니다</p>
+
+    <h3>화면 ① 권한 신청 폼 (1주차)</h3>
+    <div class="wireframe">
+        <div class="wf-header">
+            <span class="wf-title">권한 신청</span>
+            <span class="wf-badge">1주차</span>
+        </div>
+        <div class="wf-body">
+            <div class="wf-label">신청자</div>
+            <div class="wf-input">김철수 (마케팅팀)</div>
+            <div class="wf-label">접근 대상 시스템</div>
+            <div class="wf-input">고객 데이터베이스</div>
+            <div class="wf-label">접근 등급</div>
+            <div class="wf-input">Level 2 (읽기)</div>
+            <div class="wf-label">신청 사유</div>
+            <div class="wf-input">마케팅 캠페인 효과 분석을 위해 고객 데이터 조회 필요</div>
+            <button class="wf-btn">신청하기</button>
+        </div>
+    </div>
+</div>
+
+<div class="slide">
+    <h3>화면 ② 신청 목록 (1주차)</h3>
+    <div class="wireframe">
+        <div class="wf-header">
+            <span class="wf-title">내 신청 내역</span>
+            <span class="wf-badge">1주차</span>
+        </div>
+        <div class="wf-body">
+            <table class="wf-table">
+                <tr><th>시스템</th><th>등급</th><th>상태</th><th>신청일</th></tr>
+                <tr><td>고객 DB</td><td>Level 2</td><td><span class="wf-status pending">대기중</span></td><td>2026-07-01</td></tr>
+                <tr><td>사내 위키</td><td>Level 1</td><td><span class="wf-status approved">승인</span></td><td>2026-06-28</td></tr>
+                <tr><td>재무 시스템</td><td>Level 2</td><td><span class="wf-status rejected">반려</span></td><td>2026-06-25</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <h3>화면 ③ 관리자 승인/반려 (2주차)</h3>
+    <div class="wireframe">
+        <div class="wf-header">
+            <span class="wf-title">승인 대기 목록 (관리자)</span>
+            <span class="wf-badge">2주차</span>
+        </div>
+        <div class="wf-body">
+            <table class="wf-table">
+                <tr><th>신청자</th><th>시스템</th><th>사유</th><th>처리</th></tr>
+                <tr>
+                    <td>김철수</td><td>고객 DB</td><td>마케팅 분석</td>
+                    <td>
+                        <button class="wf-btn" style="padding:4px 12px; font-size:11px;">승인</button>
+                        <button class="wf-btn danger" style="padding:4px 12px; font-size:11px;">반려</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>이영희</td><td>인사 시스템</td><td>급여 조회</td>
+                    <td>
+                        <button class="wf-btn" style="padding:4px 12px; font-size:11px;">승인</button>
+                        <button class="wf-btn danger" style="padding:4px 12px; font-size:11px;">반려</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="slide">
+    <h3>화면 ④ Agent 채팅 (3주차)</h3>
+    <div class="wireframe">
+        <div class="wf-header">
+            <span class="wf-title">AccessGuard AI 채팅</span>
+            <span class="wf-badge">3주차</span>
+        </div>
+        <div class="wf-body">
+            <div class="wf-chat">
+                <div class="wf-chat-bubble user">고객 데이터베이스 접근 권한 주세요</div>
+                <div class="wf-chat-bubble agent">
+                    신청 내용을 확인했습니다.<br><br>
+                    📋 <strong>신청자:</strong> 김철수 (마케팅팀)<br>
+                    🎯 <strong>대상:</strong> 고객 데이터베이스<br>
+                    🔍 <strong>정책 검토 결과:</strong> 고객 DB는 민감 데이터(Level 2)에 해당합니다.<br><br>
+                    ⚠️ Level 2 리소스는 팀장 승인이 필요합니다.<br>
+                    팀장(박지민)님께 승인 요청을 보냈습니다.
+                </div>
+                <div class="wf-chat-bubble user">승인 얼마나 걸려요?</div>
+                <div class="wf-chat-bubble agent">
+                    평균 처리 시간은 1~2일입니다.<br>승인이 완료되면 알림을 보내드리겠습니다.
+                </div>
+            </div>
+            <div style="margin-top:12px; display:flex; gap:8px;">
+                <div class="wf-input" style="flex:1; margin:0;">메시지를 입력하세요...</div>
+                <button class="wf-btn">전송</button>
+            </div>
+        </div>
+    </div>
+
+    <h3>화면 ⑤ 처리 이력 (3주차)</h3>
+    <div class="wireframe">
+        <div class="wf-header">
+            <span class="wf-title">AI 판단 이력</span>
+            <span class="wf-badge">3주차</span>
+        </div>
+        <div class="wf-body">
+            <table class="wf-table">
+                <tr><th>시간</th><th>신청</th><th>AI 판단</th><th>근거</th></tr>
+                <tr>
+                    <td>07-01 14:30</td>
+                    <td>김철수 → 고객DB</td>
+                    <td><span class="wf-status pending">에스컬레이션</span></td>
+                    <td>Level 2 정책, 타 부서 리소스</td>
+                </tr>
+                <tr>
+                    <td>07-01 13:15</td>
+                    <td>이영희 → 사내위키</td>
+                    <td><span class="wf-status approved">자동 승인</span></td>
+                    <td>Level 1 정책, 동일 부서</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 슬라이드 13: 기술 스택 -->
+<div class="slide">
+    <h2><span class="accent">10.</span> 기술 스택 요약</h2>
+
+    <table>
+        <tr><th>구분</th><th>기술</th><th>쉽게 말하면</th></tr>
+        <tr><td>화면</td><td>Streamlit</td><td>Python으로 웹 화면을 만드는 도구</td></tr>
+        <tr><td>서버</td><td>FastAPI</td><td>화면의 요청을 받아서 처리하는 프로그램</td></tr>
+        <tr><td>DB</td><td>PostgreSQL</td><td>데이터를 표(테이블)로 저장하는 프로그램</td></tr>
+        <tr><td>AI Agent</td><td>LangGraph + Claude</td><td>흐름도대로 판단하는 AI</td></tr>
+        <tr><td>문서 검색</td><td>ChromaDB + sentence-transformers</td><td>정책 문서에서 관련 내용을 찾아주는 검색 엔진</td></tr>
+        <tr><td>AI 도구</td><td>MCP Python SDK</td><td>AI가 실제 작업(승인, 알림 등)을 수행하는 도구</td></tr>
+        <tr><td>컨테이너</td><td>Docker</td><td>프로그램을 상자에 넣어 어디서든 실행</td></tr>
+        <tr><td>배포</td><td>AWS EC2</td><td>인터넷에서 접속 가능한 서버</td></tr>
+        <tr><td>자동화</td><td>GitHub Actions</td><td>코드 올리면 자동으로 테스트 + 배포</td></tr>
+    </table>
+</div>
+
+<!-- 슬라이드 14: 5주 로드맵 -->
+<div class="slide">
+    <h2><span class="accent">11.</span> 5주 로드맵</h2>
+
+    <table>
+        <tr><th>주차</th><th>만드는 것</th><th>끝나면 되는 것</th></tr>
+        <tr>
+            <td><strong>1주차</strong></td>
+            <td>FastAPI + DB + Streamlit</td>
+            <td>화면에서 권한 신청 → DB 저장 → 목록 조회</td>
+        </tr>
+        <tr>
+            <td><strong>2주차</strong></td>
+            <td>MCP Server</td>
+            <td>AI가 쓸 도구 4개 완성 + 관리자 승인 화면</td>
+        </tr>
+        <tr>
+            <td><strong>3주차</strong></td>
+            <td>RAG + LangGraph Agent</td>
+            <td>채팅으로 "권한 주세요" → AI가 정책 보고 자동 판단</td>
+        </tr>
+        <tr>
+            <td><strong>4주차</strong></td>
+            <td>통합 테스트 + 고도화</td>
+            <td>안정적으로 동작하는 데모</td>
+        </tr>
+        <tr>
+            <td><strong>5주차</strong></td>
+            <td>Docker + CI/CD + AWS</td>
+            <td>URL로 누구나 접속 가능한 서비스 배포</td>
+        </tr>
+    </table>
+
+    <div class="highlight-box">
+        <p><strong>매주 원칙:</strong> Backend에서 API를 만들고 → Frontend(Streamlit)에서 그 API를 호출해서 화면으로 확인합니다.</p>
+    </div>
+</div>
+
+</body>
+</html>

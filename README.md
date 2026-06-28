@@ -251,9 +251,134 @@ mcp-fullstack-project/
 
 ---
 
+## 사전 준비 (시작 전 설치)
+
+### 필수 설치
+
+| 프로그램 | 버전 | 용도 | 설치 링크 |
+|---------|------|------|----------|
+| **Python** | 3.11 이상 | 백엔드, Agent, MCP 전부 Python | https://www.python.org/downloads/ |
+| **Git** | 최신 | 버전 관리 | https://git-scm.com/downloads |
+| **Docker Desktop** | 최신 | PostgreSQL 컨테이너, 배포 | https://www.docker.com/products/docker-desktop/ |
+| **VS Code** | 최신 | 코드 에디터 | https://code.visualstudio.com/ |
+
+### VS Code 추천 확장
+
+| 확장 | 용도 |
+|------|------|
+| Python (Microsoft) | Python 자동완성, 린트 |
+| Docker (Microsoft) | Docker 파일 지원 |
+| GitLens | Git 이력 시각화 |
+| REST Client 또는 Thunder Client | API 테스트 (Swagger 대안) |
+
+### 계정 준비
+
+| 서비스 | 필요 시점 | 비고 |
+|--------|----------|------|
+| **GitHub** | 1주차 | 레포 접근용 (collaborator 초대 필요) |
+| **Anthropic** | 3주차 | Claude API 키 발급 (https://console.anthropic.com/) |
+| **AWS** | 5주차 | EC2 배포용 — 프리티어 12개월 무료 (https://aws.amazon.com/) |
+
+### 설치 확인 방법
+
+터미널에서 아래 명령어가 정상 동작하면 준비 완료:
+
+```bash
+python --version    # Python 3.11.x 이상
+git --version       # git version 2.x.x
+docker --version    # Docker version 2x.x.x
+code --version      # VS Code 버전 출력
+```
+
+---
+
+## DB 테이블 설계
+
+```
+┌──────────────┐       ┌───────────────────┐
+│    users     │       │  access_requests  │
+├──────────────┤       ├───────────────────┤
+│ id (PK)      │──┐    │ id (PK)           │
+│ name         │  │    │ user_id (FK)      │←─┐
+│ email        │  └───→│ resource_name     │  │
+│ department   │       │ access_level      │  │
+│ role         │       │ status            │  │
+│ created_at   │       │ reason            │  │
+└──────────────┘       │ created_at        │  │
+                       │ updated_at        │  │
+                       └───────────────────┘  │
+                                              │
+┌──────────────┐       ┌───────────────────┐  │
+│ permissions  │       │   audit_logs      │  │
+├──────────────┤       ├───────────────────┤  │
+│ id (PK)      │       │ id (PK)           │  │
+│ user_id (FK) │←──────│ request_id (FK)   │  │
+│ resource_name│       │ action            │  │
+│ access_level │       │ decision          │  │
+│ granted_at   │       │ reasoning         │  │
+│ expires_at   │       │ policy_referenced │  │
+└──────────────┘       │ decided_by        │  │
+                       │ created_at        │  │
+                       └───────────────────┘  │
+```
+
+| 테이블 | 역할 | 생성 시점 |
+|--------|------|----------|
+| `users` | 사용자 정보 (신청자, 승인자) | 1주차 |
+| `access_requests` | 권한 신청 내역 | 1주차 |
+| `permissions` | 현재 부여된 권한 | 1주차 |
+| `audit_logs` | Agent 판단 과정 기록 | 3주차 |
+
+### status 값
+
+| 값 | 의미 |
+|----|------|
+| `pending` | 대기중 |
+| `approved` | 승인 |
+| `rejected` | 반려 |
+| `conditional` | 조건부 승인 |
+| `escalated` | 담당자 라우팅 |
+
+---
+
+## API 명세
+
+### 1주차 API
+
+| Method | URL | 설명 |
+|--------|-----|------|
+| `POST` | `/api/v1/access-requests` | 권한 신청 |
+| `GET` | `/api/v1/access-requests` | 신청 목록 조회 |
+| `GET` | `/api/v1/access-requests/{id}` | 신청 상세 조회 |
+| `PATCH` | `/api/v1/access-requests/{id}` | 신청 상태 변경 (승인/반려) |
+| `GET` | `/api/v1/users/{id}/permissions` | 사용자 현재 권한 조회 |
+
+### 3주차 API
+
+| Method | URL | 설명 |
+|--------|-----|------|
+| `POST` | `/api/v1/agent/chat` | 자연어 → Agent 실행 → 결과 반환 |
+| `GET` | `/api/v1/audit-logs` | 판단 이력 조회 |
+
+---
+
+## 환경변수 (.env)
+
+| 변수 | 설명 | 필요 시점 |
+|------|------|----------|
+| `DATABASE_URL` | PostgreSQL 접속 주소 | 1주차 |
+| `ANTHROPIC_API_KEY` | Claude API 키 | 3주차 |
+
+```bash
+# .env 예시
+DATABASE_URL=postgresql://postgres:password@localhost:5432/accessguard
+ANTHROPIC_API_KEY=sk-ant-xxxxx
+```
+
+---
+
 ## 참고 레퍼런스
 
-- [skein MCP 서버 구조](https://github.com/amamov/skein) — MCP 서버 구성 구조(폴더, Tool 정의 패턴, 서버-백엔드 연결 방식)만 참고. 실제 코드/로직은 직접 구현할 것
 - [FastAPI 공식 문서](https://fastapi.tiangolo.com/)
 - [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
 - [LangGraph 공식 문서](https://langchain-ai.github.io/langgraph/)
