@@ -20,3 +20,8 @@ Thumbs.db
 
 # ChromaDB
 chroma_data/
+
+# Node.js / Next.js
+node_modules/
+.next/
+out/
