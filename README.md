@@ -7,7 +7,7 @@
 ## 전체 아키텍처
 
 ```
-사용자 (Streamlit)
+사용자 (Next.js)
   │
   ▼
 FastAPI 백엔드
@@ -46,8 +46,8 @@ LangGraph Agent (그래프 기반 워크플로우)
 ### 호출 흐름 요약
 
 ```
-1. 사용자가 Streamlit에서 자연어로 권한 신청
-2. Streamlit → FastAPI `/api/v1/agent/chat` 엔드포인트 호출
+1. 사용자가 Next.js 화면에서 자연어로 권한 신청
+2. Next.js → FastAPI `/api/v1/agent/chat` 엔드포인트 호출 (fetch)
 3. FastAPI가 LangGraph Agent 실행
 4. LangGraph가 그래프 노드를 순서대로 실행:
    a. 신청 접수 노드 → MCP Tool(check_access)로 신청자 정보 조회
@@ -91,8 +91,12 @@ mcp-fullstack-project/
 │   ├── docs/                   # 보안 정책 문서 (md 파일)
 │   └── scripts/                # 임베딩 + 벡터DB 적재 스크립트
 │
-├── frontend/                   # Streamlit 프론트엔드
-│   └── app.py                  # Streamlit 메인 앱
+├── frontend/                   # Next.js 프론트엔드 (TypeScript)
+│   ├── src/
+│   │   ├── app/                # App Router 페이지
+│   │   └── components/         # UI 컴포넌트
+│   ├── package.json
+│   └── tsconfig.json
 │
 ├── Dockerfile                  # 앱 컨테이너 이미지
 ├── docker-compose.yml          # FastAPI + PostgreSQL + ChromaDB 통합
@@ -122,7 +126,7 @@ mcp-fullstack-project/
 | Agent | LangGraph + Claude (ChatAnthropic) |
 | RAG | sentence-transformers + ChromaDB |
 | MCP | MCP Python SDK |
-| Frontend | Streamlit |
+| Frontend | Next.js (TypeScript) |
 | Infra | Docker Compose |
 | CI/CD | GitHub Actions + AWS EC2 |
 
@@ -130,32 +134,33 @@ mcp-fullstack-project/
 
 ## 5주 커리큘럼
 
-> 각 주차의 핵심 원칙: **BE에서 API 만들기 → FE(Streamlit)에서 그 API 호출해서 화면 확인**
+> 각 주차의 핵심 원칙: **BE에서 API 만들기 → FE(Next.js)에서 fetch로 그 API 호출해서 화면 확인**
+> UI는 멘토가 제공, 멘티는 API 연동(fetch) 구현에 집중
 > Day 단위는 가이드라인이며, 개인 속도에 따라 유연하게 조정
 
-### 1주차: FastAPI + DB + Streamlit 기초
+### 1주차: FastAPI + DB + Next.js 기초
 
-**목표**: API로 권한 신청 CRUD가 되고, Streamlit 화면에서 신청/조회까지 동작
+**목표**: API로 권한 신청 CRUD가 되고, Next.js 화면에서 신청/조회까지 동작
 
 **Backend 체크리스트:**
-- [ ] 개발 환경 세팅 (Python, Git, Docker, VS Code)
+- [ ] 개발 환경 세팅 (Python, Git, Docker, VS Code, Node.js)
 - [ ] Docker Compose로 PostgreSQL 컨테이너 띄우기
 - [ ] FastAPI 기초 (라우팅, Request/Response, Swagger UI)
 - [ ] SQLAlchemy ORM 모델 설계 (users, access_requests, permissions, audit_logs)
 - [ ] CRUD API 구현: `POST /api/v1/access-requests`, `GET /api/v1/access-requests`, etc.
 
 **Frontend 체크리스트:**
-- [ ] Streamlit 기초 (레이아웃, 입력 폼, 상태 관리)
-- [ ] 권한 신청 폼 → FastAPI `POST` 호출
-- [ ] 신청 목록 조회 → FastAPI `GET` 호출해서 테이블로 표시
+- [ ] Next.js 프로젝트 세팅 (UI는 멘토가 제공)
+- [ ] 권한 신청 폼 → `fetch`로 FastAPI `POST` 호출
+- [ ] 신청 목록 조회 → `fetch`로 FastAPI `GET` 호출해서 표시
 
-**산출물**: Streamlit에서 권한 신청 → FastAPI → DB 저장 → 목록 조회까지 동작
+**산출물**: Next.js에서 권한 신청 → FastAPI → DB 저장 → 목록 조회까지 동작
 
 ---
 
 ### 2주차: MCP Server
 
-**목표**: MCP Tool 4개가 services/ 레이어를 통해 DB에 접근하고, Streamlit에서 MCP 연동 확인
+**목표**: MCP Tool 4개가 services/ 레이어를 통해 DB에 접근하고, Next.js에서 MCP 연동 확인
 
 **Backend 체크리스트:**
 - [ ] MCP 개념 이해 (Tool, Resource, Prompt 구조)
@@ -168,10 +173,10 @@ mcp-fullstack-project/
 - [ ] MCP Tool ↔ services/ 연동 테스트
 
 **Frontend 체크리스트:**
-- [ ] 관리자용 승인/반려 처리 화면 → FastAPI `PATCH` 호출 (1주차 신청자 화면과 역할 분리)
+- [ ] 관리자용 승인/반려 처리 화면 → `fetch`로 FastAPI `PATCH` 호출 (1주차 신청자 화면과 역할 분리)
 - [ ] 신청 상태 표시 (대기중/승인/반려) 실시간 반영
 
-**산출물**: MCP Tool이 services/ 레이어를 통해 DB CRUD 동작 + Streamlit 관리자 화면에서 승인/반려 처리 확인
+**산출물**: MCP Tool이 services/ 레이어를 통해 DB CRUD 동작 + Next.js 관리자 화면에서 승인/반려 처리 확인
 
 ---
 
@@ -193,11 +198,11 @@ mcp-fullstack-project/
 - [ ] FastAPI `/api/v1/agent/chat` 엔드포인트 추가
 
 **Frontend 체크리스트:**
-- [ ] Agent 채팅 인터페이스 → FastAPI `/api/v1/agent/chat` 호출
-- [ ] 승인 대기 목록 화면 → FastAPI API 호출
-- [ ] 처리 이력 조회 화면 → FastAPI API 호출
+- [ ] Agent 채팅 인터페이스 → `fetch`로 FastAPI `/api/v1/agent/chat` 호출
+- [ ] 승인 대기 목록 화면 → `fetch`로 FastAPI API 호출
+- [ ] 처리 이력 조회 화면 → `fetch`로 FastAPI API 호출
 
-**산출물**: Streamlit 채팅에서 "마케팅 대시보드 권한 주세요" → FastAPI → LangGraph Agent가 정책 검토 후 자동 처리 → 결과 화면에 표시
+**산출물**: Next.js 채팅에서 "마케팅 대시보드 권한 주세요" → FastAPI → LangGraph Agent가 정책 검토 후 자동 처리 → 결과 화면에 표시
 
 ---
 
@@ -206,7 +211,7 @@ mcp-fullstack-project/
 **목표**: 전체 흐름 안정화 + Agent 판단 품질 향상 + 데모 가능 상태
 
 **체크리스트:**
-- [ ] 전체 E2E 흐름 테스트 (Streamlit → FastAPI → Agent → MCP → DB → 화면)
+- [ ] 전체 E2E 흐름 테스트 (Next.js → FastAPI → Agent → MCP → DB → 화면)
 - [ ] 엣지 케이스 처리 (잘못된 신청, 중복 신청, 권한 만료 등)
 - [ ] Agent 멀티턴 대화 보완 (추가 질문, 확인 요청)
 - [ ] 프롬프트 튜닝 (판단 정확도 개선)
@@ -260,6 +265,7 @@ mcp-fullstack-project/
 | **Python** | 3.11 이상 | 백엔드, Agent, MCP 전부 Python | https://www.python.org/downloads/ |
 | **Git** | 최신 | 버전 관리 | https://git-scm.com/downloads |
 | **Docker Desktop** | 최신 | PostgreSQL 컨테이너, 배포 | https://www.docker.com/products/docker-desktop/ |
+| **Node.js** | 20 LTS | Next.js 프론트엔드 실행 | https://nodejs.org/ |
 | **VS Code** | 최신 | 코드 에디터 | https://code.visualstudio.com/ |
 
 ### VS Code 추천 확장
@@ -287,6 +293,7 @@ mcp-fullstack-project/
 python --version    # Python 3.11.x 이상
 git --version       # git version 2.x.x
 docker --version    # Docker version 2x.x.x
+node --version      # v20.x.x
 code --version      # VS Code 버전 출력
 ```
 

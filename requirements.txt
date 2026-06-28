@@ -8,9 +8,7 @@
 # psycopg2-binary
 # python-dotenv
 
-# 1주차: Frontend
-# streamlit
-# requests
+# Frontend는 Next.js (TypeScript) — frontend/package.json으로 관리
 
 # 2주차: MCP
 # mcp
