@@ -1,0 +1,80 @@
+[
+  {
+    "name": "사내 위키",
+    "access_level": 1,
+    "department": "공통",
+    "description": "사내 업무 가이드, 매뉴얼, 회의록 등"
+  },
+  {
+    "name": "공유 폴더 (마케팅)",
+    "access_level": 1,
+    "department": "마케팅팀",
+    "description": "마케팅팀 캠페인 자료, 보고서 등"
+  },
+  {
+    "name": "공유 폴더 (개발)",
+    "access_level": 1,
+    "department": "개발팀",
+    "description": "개발팀 기술 문서, 설계 자료 등"
+  },
+  {
+    "name": "사내 메신저",
+    "access_level": 1,
+    "department": "공통",
+    "description": "전사 커뮤니케이션 도구"
+  },
+  {
+    "name": "GitHub (사내)",
+    "access_level": 1,
+    "department": "개발팀",
+    "description": "소스 코드 저장소, 프로젝트별 접근"
+  },
+  {
+    "name": "고객 데이터베이스",
+    "access_level": 2,
+    "department": "개발팀",
+    "description": "고객 개인정보, 구매 이력, 서비스 이용 기록 포함"
+  },
+  {
+    "name": "CRM",
+    "access_level": 2,
+    "department": "마케팅팀",
+    "description": "고객 관계 관리 시스템, 고객 연락처 및 상담 이력 포함"
+  },
+  {
+    "name": "재무 시스템",
+    "access_level": 2,
+    "department": "재무팀",
+    "description": "매출, 비용, 예산 등 재무 데이터"
+  },
+  {
+    "name": "ERP",
+    "access_level": 2,
+    "department": "재무팀",
+    "description": "전사 자원 관리 시스템, 재무 모듈 포함"
+  },
+  {
+    "name": "운영 서버",
+    "access_level": 2,
+    "department": "개발팀",
+    "description": "프로덕션 서버, 실서비스 운영 환경"
+  },
+  {
+    "name": "인사 시스템",
+    "access_level": 3,
+    "department": "인사팀",
+    "description": "직원 인사 정보, 근태, 평가 기록"
+  },
+  {
+    "name": "급여 시스템",
+    "access_level": 3,
+    "department": "인사팀",
+    "description": "직원 급여, 상여금, 세금 정보"
+  },
+  {
+    "name": "보안 로그",
+    "access_level": 3,
+    "department": "보안팀",
+    "description": "시스템 접근 로그, 이상 행위 탐지 로그"
+  }
+]
