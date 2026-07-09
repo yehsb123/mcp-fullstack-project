@@ -128,7 +128,8 @@ mcp-fullstack-project/
 | MCP | MCP Python SDK |
 | Frontend | Next.js (TypeScript) |
 | Infra | Docker Compose |
-| CI/CD | GitHub Actions + AWS EC2 |
+| CI/CD | GitHub Actions |
+| 배포 | Next.js → Vercel / FastAPI + DB + Agent → AWS EC2 |
 
 ---
 
@@ -148,6 +149,7 @@ mcp-fullstack-project/
 - [ ] FastAPI 기초 (라우팅, Request/Response, Swagger UI)
 - [ ] SQLAlchemy ORM 모델 설계 (users, access_requests, permissions, audit_logs)
 - [ ] CRUD API 구현: `POST /api/v1/access-requests`, `GET /api/v1/access-requests`, etc.
+- [ ] CORS 미들웨어 설정 (Next.js localhost:3000 → FastAPI localhost:8000 허용)
 
 **Frontend 체크리스트:**
 - [ ] Next.js 프로젝트 세팅 (UI는 멘토가 제공)
@@ -223,24 +225,36 @@ mcp-fullstack-project/
 
 ---
 
-### 5주차: Docker 배포 + CI/CD (AWS EC2)
+### 5주차: Docker 배포 + CI/CD (Vercel + AWS EC2)
 
-**목표**: 전체 서비스를 Docker로 컨테이너화하고, GitHub Actions로 EC2에 자동 배포
+**목표**: Frontend는 Vercel, Backend는 EC2에 Docker로 배포 + GitHub Actions 자동화
 
-**체크리스트:**
+**Backend 배포 (AWS EC2) 체크리스트:**
 - [ ] AWS 계정 생성 + EC2 인스턴스 생성 (t2.micro, Ubuntu) + SSH 접속
 - [ ] EC2에 Docker, Docker Compose 설치
 - [ ] 보안그룹 포트 설정 (80, 443, 8000)
-- [ ] Dockerfile 작성 (앱 전체 컨테이너화 — 1주차 PostgreSQL만 띄운 것과 다름)
+- [ ] Dockerfile 작성 (FastAPI + Agent + MCP 컨테이너화 — 1주차 PostgreSQL만 띄운 것과 다름)
 - [ ] docker-compose.yml 완성 (FastAPI + PostgreSQL + ChromaDB 통합)
 - [ ] EC2에서 docker-compose up으로 전체 서비스 실행 확인
+- [ ] CORS 설정 업데이트 (localhost → Vercel 도메인 허용)
+
+**Frontend 배포 (Vercel) 체크리스트:**
+- [ ] Vercel 계정 생성 (GitHub 계정으로 가입)
+- [ ] Vercel에서 레포 import (Root Directory: `frontend`)
+- [ ] 환경변수 설정 (API 서버 URL → EC2 주소)
+- [ ] 배포 확인
+
+**CI/CD 체크리스트:**
 - [ ] GitHub Actions CI 구성 (push → 린트 + 테스트)
 - [ ] GitHub Actions CD 구성 (main push → EC2에 자동 배포)
-- [ ] 환경변수 관리 (.env → EC2 환경변수)
+- [ ] Vercel은 push 시 자동 배포 (별도 설정 불필요)
 
-**산출물**: `http://{EC2-IP}:8000` 으로 외부 접속 가능한 배포 서비스 + CI/CD 파이프라인
+**산출물**:
+- Frontend: `https://프로젝트명.vercel.app`
+- API: `http://{EC2-IP}:8000`
+- CI/CD 파이프라인 동작 확인
 
-> **주의**: 프리티어 (t2.micro, 월 750시간 무료, 12개월). 프로젝트 종료 후 반드시 리소스 정리할 것
+> **주의**: EC2 프리티어 (t2.micro, 월 750시간 무료, 12개월). 프로젝트 종료 후 반드시 리소스 정리할 것
 
 ---
 
@@ -283,7 +297,8 @@ mcp-fullstack-project/
 |--------|----------|------|
 | **GitHub** | 1주차 | 레포 접근용 (collaborator 초대 필요) |
 | **Anthropic** | 3주차 | Claude API 키 발급 (https://console.anthropic.com/) |
-| **AWS** | 5주차 | EC2 배포용 — 프리티어 12개월 무료 (https://aws.amazon.com/) |
+| **Vercel** | 5주차 | Next.js 프론트엔드 배포 — GitHub 계정으로 가입 (https://vercel.com/) |
+| **AWS** | 5주차 | EC2 백엔드 배포용 — 프리티어 12개월 무료 (https://aws.amazon.com/) |
 
 ### 설치 확인 방법
 

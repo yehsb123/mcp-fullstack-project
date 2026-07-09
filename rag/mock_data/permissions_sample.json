@@ -1,0 +1,83 @@
+[
+  {
+    "id": 1,
+    "user_id": 1,
+    "user_name": "김철수",
+    "resource_name": "사내 위키",
+    "access_level": 1,
+    "granted_at": "2026-06-28T09:00:05",
+    "expires_at": "2026-12-25T23:59:59"
+  },
+  {
+    "id": 2,
+    "user_id": 1,
+    "user_name": "김철수",
+    "resource_name": "공유 폴더 (마케팅)",
+    "access_level": 1,
+    "granted_at": "2026-06-28T09:00:05",
+    "expires_at": "2026-12-25T23:59:59"
+  },
+  {
+    "id": 3,
+    "user_id": 1,
+    "user_name": "김철수",
+    "resource_name": "사내 메신저",
+    "access_level": 1,
+    "granted_at": "2026-06-28T09:00:05",
+    "expires_at": "2026-12-25T23:59:59"
+  },
+  {
+    "id": 4,
+    "user_id": 2,
+    "user_name": "이영희",
+    "resource_name": "사내 위키",
+    "access_level": 1,
+    "granted_at": "2022-07-01T09:00:00",
+    "expires_at": "2027-07-01T23:59:59"
+  },
+  {
+    "id": 5,
+    "user_id": 2,
+    "user_name": "이영희",
+    "resource_name": "GitHub (사내)",
+    "access_level": 1,
+    "granted_at": "2026-06-29T08:15:03",
+    "expires_at": "2026-12-26T23:59:59"
+  },
+  {
+    "id": 6,
+    "user_id": 2,
+    "user_name": "이영희",
+    "resource_name": "개발 서버",
+    "access_level": 1,
+    "granted_at": "2022-07-01T09:00:00",
+    "expires_at": "2027-07-01T23:59:59"
+  },
+  {
+    "id": 7,
+    "user_id": 3,
+    "user_name": "박지민",
+    "resource_name": "CRM",
+    "access_level": 2,
+    "granted_at": "2025-01-15T10:00:00",
+    "expires_at": "2026-10-15T23:59:59"
+  },
+  {
+    "id": 8,
+    "user_id": 4,
+    "user_name": "정수현",
+    "resource_name": "인사 시스템",
+    "access_level": 3,
+    "granted_at": "2026-01-10T09:00:00",
+    "expires_at": "2026-07-10T23:59:59"
+  },
+  {
+    "id": 9,
+    "user_id": 6,
+    "user_name": "한소영",
+    "resource_name": "재무 시스템",
+    "access_level": 2,
+    "granted_at": "2026-03-01T09:00:00",
+    "expires_at": "2026-09-01T23:59:59"
+  }
+]
