@@ -1,7 +1,16 @@
-# Docker Compose 설정
-# 1주차: PostgreSQL만 띄우기
-# 5주차: FastAPI + PostgreSQL + ChromaDB 전체 통합
+services:
+  db:
+    image: postgres:16
+    container_name: accessguard-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: accessguard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
-# TODO: PostgreSQL 서비스 (1주차)
-# TODO: FastAPI 서비스 (5주차)
-# TODO: ChromaDB 서비스 (5주차)
+volumes:
+  pgdata:

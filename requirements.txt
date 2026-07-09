@@ -1,14 +1,10 @@
-# Python 의존성
-# 주차별로 추가해 나갈 것
-
 # 1주차: Backend
-# fastapi
-# uvicorn
-# sqlalchemy
-# psycopg2-binary
-# python-dotenv
-
-# Frontend는 Next.js (TypeScript) — frontend/package.json으로 관리
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+python-dotenv
+pydantic-settings
 
 # 2주차: MCP
 # mcp
