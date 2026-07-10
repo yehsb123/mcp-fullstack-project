@@ -3,6 +3,7 @@
 
 
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base   # declarative_base 추가
 from app.core.config import settings #config에서 만든 settings 가져옴
 from sqlalchemy.orm import sessionmaker 
 
@@ -11,6 +12,8 @@ engine=create_engine(settings.DATABASE_URL)
 
 # SessionLocal 팩토리
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine) #세션 필요하면 SessionLocal()하면 세션 하나씩 뽑혀나옴
+
+Base = declarative_base() 
 
 #get_db 의존성 함수
 def get_db():
