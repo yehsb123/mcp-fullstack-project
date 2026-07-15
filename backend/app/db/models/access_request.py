@@ -1,5 +1,5 @@
 # AccessRequest 모델 (권한 신청)
-from app.schemas.permission import PermissionResponse
+
 
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.sql import func
@@ -16,3 +16,5 @@ class AccessRequest(Base):
     reason = Column(String)                                      # 신청 사유
     created_at = Column(DateTime, server_default=func.now())     # 생성시각 자동
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())  # 수정시각 자동갱신
+
+

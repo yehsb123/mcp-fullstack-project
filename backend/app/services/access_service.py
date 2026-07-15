@@ -12,6 +12,8 @@
 from sqlalchemy.orm import Session
 from app.db.models.access_request import AccessRequest
 from app.schemas.access_request import AccessRequestCreate
+from app.db.models.permission import Permission 
+
 
 # 권한 신청 생성 
 def create_request(db: Session, data: AccessRequestCreate):
