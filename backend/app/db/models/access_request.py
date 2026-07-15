@@ -1,4 +1,6 @@
 # AccessRequest 모델 (권한 신청)
+from app.schemas.permission import PermissionResponse
+
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from app.core.database import Base

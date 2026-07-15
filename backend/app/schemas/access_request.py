@@ -24,3 +24,15 @@ class AccessRequestResponse(BaseModel):
     created_at: datetime
 
     model_config = {"from_attributes": True}  # ORM 객체 --> 스키마 자동 변환 허용
+
+
+# 권한 응답 양식
+class PermissionResponse(BaseModel):
+    id: int
+    user_id: int
+    resource_name: str
+    access_level: str
+    granted_at: datetime
+    expires_at: Optional[datetime] = None
+
+    model_config = {"from_attributes": True}
