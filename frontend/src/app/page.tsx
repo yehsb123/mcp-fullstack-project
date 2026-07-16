@@ -28,21 +28,37 @@ export default function Home() {
   const [reason, setReason] = useState("");
 
   // --- 신청 목록 조회 ---
-  // TODO: fetch로 GET /api/v1/access-requests 호출
+  //fetch로 GET /api/v1/access-requests 호출
   // 힌트: fetch(`${API_BASE}/access-requests`).then(res => res.json()).then(data => setRequests(data))
   const fetchRequests = async () => {
-    // 여기에 구현하세요
+    const res = await fetch(`${API_BASE}/access-requests`);
+    const data = await res.json();
+    setRequests(data);
   };
 
   // --- 권한 신청 ---
-  // TODO: fetch로 POST /api/v1/access-requests 호출
+  //  fetch로 POST /api/v1/access-requests 호출
   // 힌트: fetch(`${API_BASE}/access-requests`, { method: "POST", headers: {...}, body: JSON.stringify({...}) })
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 여기에 구현하세요
+    
+    setLoading(true);
 
-    // 성공 후 목록 새로고침
-    // await fetchRequests();
+    await fetch(`${API_BASE}/access-requests`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: Number(userId),
+        resource_name: resourceName,
+        access_level: accessLevel,
+        reason: reason,
+      }),
+    });
+
+    setLoading(false);
+    setResourceName("");
+    setReason("");
+    await fetchRequests();
   };
 
   // 페이지 로드 시 목록 조회
