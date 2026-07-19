@@ -28,8 +28,6 @@ export default function Home() {
   const [reason, setReason] = useState("");
 
   // --- 신청 목록 조회 ---
-  //fetch로 GET /api/v1/access-requests 호출
-  // 힌트: fetch(`${API_BASE}/access-requests`).then(res => res.json()).then(data => setRequests(data))
   const fetchRequests = async () => {
     const res = await fetch(`${API_BASE}/access-requests`);
     const data = await res.json();
@@ -37,11 +35,9 @@ export default function Home() {
   };
 
   // --- 권한 신청 ---
-  //  fetch로 POST /api/v1/access-requests 호출
-  // 힌트: fetch(`${API_BASE}/access-requests`, { method: "POST", headers: {...}, body: JSON.stringify({...}) })
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     setLoading(true);
 
     await fetch(`${API_BASE}/access-requests`, {
@@ -58,6 +54,15 @@ export default function Home() {
     setLoading(false);
     setResourceName("");
     setReason("");
+    await fetchRequests();
+  };
+
+  // --- 승인/반려 처리 (2주차) ---
+  // TODO: fetch로 PATCH /api/v1/access-requests/{id} 호출
+  // 힌트: fetch(`${API_BASE}/access-requests/${requestId}`, { method: "PATCH", headers: {...}, body: JSON.stringify({ status: newStatus }) })
+  const handleStatusChange = async (requestId: number, newStatus: string) => {
+    // TODO: 여기에 fetch PATCH 코드 작성
+
     await fetchRequests();
   };
 
@@ -143,6 +148,7 @@ export default function Home() {
                 <th style={{ padding: 8, textAlign: "left" }}>레벨</th>
                 <th style={{ padding: 8, textAlign: "left" }}>상태</th>
                 <th style={{ padding: 8, textAlign: "left" }}>신청일</th>
+                <th style={{ padding: 8, textAlign: "left" }}>처리</th>
               </tr>
             </thead>
             <tbody>
@@ -162,6 +168,26 @@ export default function Home() {
                     </span>
                   </td>
                   <td style={{ padding: 8 }}>{new Date(req.created_at).toLocaleDateString("ko-KR")}</td>
+                  <td style={{ padding: 8 }}>
+                    {req.status === "pending" ? (
+                      <div style={{ display: "flex", gap: 6 }}>
+                        <button
+                          onClick={() => handleStatusChange(req.id, "approved")}
+                          style={{ padding: "4px 12px", background: "#28a745", color: "#fff", border: "none", borderRadius: 4, cursor: "pointer", fontSize: 13 }}
+                        >
+                          승인
+                        </button>
+                        <button
+                          onClick={() => handleStatusChange(req.id, "rejected")}
+                          style={{ padding: "4px 12px", background: "#dc3545", color: "#fff", border: "none", borderRadius: 4, cursor: "pointer", fontSize: 13 }}
+                        >
+                          반려
+                        </button>
+                      </div>
+                    ) : (
+                      <span style={{ color: "#999", fontSize: 13 }}>처리완료</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
