@@ -29,5 +29,8 @@ def request_access(user_id: int, resource_name: str, access_level: str, reason: 
             "status": result.status,
             "reason": result.reason,
         }
+    except Exception:
+        db.rollback()   
+        raise           
     finally:
         db.close()

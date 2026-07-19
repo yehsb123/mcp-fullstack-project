@@ -30,5 +30,8 @@ def approve_access(request_id: int, decision: str) -> dict:
             "access_level": result.access_level,
             "status": result.status,
         }
+    except Exception:
+        db.rollback()
+        raise
     finally:
         db.close()

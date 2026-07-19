@@ -27,5 +27,8 @@ def check_access(user_id: int) -> dict:
                 for p in permissions
             ],
         }
+    except Exception:
+        db.rollback()   
+        raise           
     finally:
         db.close()
