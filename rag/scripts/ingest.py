@@ -1,6 +1,50 @@
-# RAG 문서 임베딩 + ChromaDB 적재 스크립트
+# RAG 문서 임베딩 + ChromaDB 저장 스크립트
 # 3주차에 구현
+# 실행법: 프로젝트 루트에서 → python rag/scripts/ingest.py
 
-# TODO: rag/docs/ 폴더의 md 파일 로드
-# TODO: sentence-transformers로 임베딩
-# TODO: ChromaDB에 저장
+import os
+import chromadb
+
+# --- 멘토 제공: ChromaDB 설정 (수정하지 마세요) ---
+DOCS_DIR = os.path.join(os.path.dirname(__file__), "..", "docs")
+CHROMA_DIR = os.path.join(os.path.dirname(__file__), "..", "chroma_db")
+
+client = chromadb.PersistentClient(path=CHROMA_DIR)
+collection = client.get_or_create_collection(
+    name="access_policies",
+    metadata={"hnsw:space": "cosine"},
+)
+
+
+def ingest_documents():
+    """rag/docs/ 폴더의 .md 파일을 읽어서 ChromaDB에 저장한다."""
+
+    # TODO: 아래 4단계를 구현하세요
+    #
+    # --- 1단계: .md 파일 목록 가져오기 ---
+    # md_files = [f for f in os.listdir(DOCS_DIR) if f.endswith(".md")]
+    #
+    # --- 2단계: 각 파일 내용 읽어서 리스트에 담기 ---
+    # documents = []
+    # ids = []
+    #
+    # for filename in md_files:
+    #     file_path = os.path.join(DOCS_DIR, filename)
+    #     with open(file_path, "r", encoding="utf-8") as f:
+    #         content = f.read()
+    #     documents.append(content)
+    #     ids.append(filename)
+    #
+    # --- 3단계: ChromaDB에 저장 ---
+    # collection.upsert(documents=documents, ids=ids)
+    #
+    # --- 4단계: 결과 출력 ---
+    # print(f"총 {len(documents)}개 문서 임베딩 완료!")
+    # for doc_id in ids:
+    #     print(f"  - {doc_id}")
+
+    pass
+
+
+if __name__ == "__main__":
+    ingest_documents()
