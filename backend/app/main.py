@@ -21,7 +21,7 @@ app = FastAPI(title="AccessGuard API")
 # CORS 설정 — 프론트(3000)가 백엔드(8000)에 접근하도록 허용
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # 허용할 프론트 주소
+    allow_origins=["http://localhost:3000", "http://localhost:3001"],
     allow_credentials=True,
     allow_methods=["*"],                       # 모든 방식 허용
     allow_headers=["*"],
