@@ -62,6 +62,11 @@ export default function Home() {
   // 힌트: fetch(`${API_BASE}/access-requests/${requestId}`, { method: "PATCH", headers: {...}, body: JSON.stringify({ status: newStatus }) })
   const handleStatusChange = async (requestId: number, newStatus: string) => {
     // TODO: 여기에 fetch PATCH 코드 작성
+    await fetch(`${API_BASE}/access-requests/${requestId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus }),
+    });
 
     await fetchRequests();
   };
