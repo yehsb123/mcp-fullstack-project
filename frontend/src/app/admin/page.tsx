@@ -27,7 +27,11 @@ export default function AdminPage() {
   // TODO: fetch로 PATCH /api/v1/access-requests/{id} 호출
   // 힌트: fetch(`${API_BASE}/access-requests/${requestId}`, { method: "PATCH", headers: {...}, body: JSON.stringify({ status: newStatus }) })
   const handleStatusChange = async (requestId: number, newStatus: string) => {
-    // TODO: 여기에 fetch PATCH 코드 작성
+    await fetch(`${API_BASE}/access-requests/${requestId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus }),
+    });
 
     await fetchRequests();
   };
