@@ -30,17 +30,17 @@ router = APIRouter(prefix="/api/v1", tags=["agent"])
 
 
 # TODO: POST /agent/chat 엔드포인트를 만드세요
-# ★ access_requests.py의 create_access_request() 함수를 참고하세요
-#
-# @router.post("/agent/chat", response_model=ChatResponse)
-# def agent_chat(data: ChatRequest):
-#     # 1단계: Agent 실행
-#     from agent.graph import run_agent
-#     result = run_agent(user_message=data.message, user_id=data.user_id)
-#
-#     # 2단계: 결과 반환
-#     return ChatResponse(
-#         decision=result.get("decision", ""),
-#         reasoning=result.get("reasoning", ""),
-#         actions_taken=result.get("actions_taken", []),
-#     )
+# ★ access_requests.py의 create_access_request() 함수를 참고하세요 뼈대가 같음
+
+@router.post("/agent/chat", response_model=ChatResponse)
+def agent_chat(data: ChatRequest):
+    # 1단계: Agent 실행
+    from agent.graph import run_agent
+    result = run_agent(user_message=data.message, user_id=data.user_id)
+
+    # 2단계: 결과 반환
+    return ChatResponse(
+        decision=result.get("decision", ""),
+        reasoning=result.get("reasoning", ""),
+        actions_taken=result.get("actions_taken", []),
+    )

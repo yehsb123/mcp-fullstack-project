@@ -16,33 +16,33 @@ def build_graph():
     """Agent 그래프를 만들고 컴파일한다."""
 
     # TODO: 아래 5단계를 구현하세요
-    #
+    
     # --- 1단계: 빈 그래프 만들기 ---
-    # graph = StateGraph(AgentState)
-    #
+    graph = StateGraph(AgentState) #AgentState 모양을 주고받는 빈 그래프 생성 
+    
     # --- 2단계: 노드 5개 등록 ---
-    # ★ add_node("이름", 함수) 형태입니다
-    # graph.add_node("intake", intake_node)
-    # graph.add_node("search_policy", search_policy_node)
-    # graph.add_node("decide", decide_node)
-    # graph.add_node("execute", execute_node)
-    # graph.add_node("log", log_node)
-    #
-    # --- 3단계: 시작점 설정 ---
-    # graph.set_entry_point("intake")
-    #
+    # ★ add_node("이름", 함수) 형태입니다, 노드 다섯 개 등록 
+    graph.add_node("intake", intake_node)
+    graph.add_node("search_policy", search_policy_node)
+    graph.add_node("decide", decide_node)
+    graph.add_node("execute", execute_node)
+    graph.add_node("log", log_node)
+    
+    # --- 3단계: 시작점(intake) 설정 ---
+    graph.set_entry_point("intake") 
+    
     # --- 4단계: 엣지 연결 (순서대로 연결) ---
-    # ★ add_edge("A", "B") = A 끝나면 B 실행
-    # graph.add_edge("intake", "search_policy")
-    # graph.add_edge("search_policy", "decide")
-    # graph.add_edge("decide", "execute")
-    # graph.add_edge("execute", "log")
-    # graph.add_edge("log", END)
-    #
+    #★ add_edge("A", "B") = A 끝나면 B 실행
+    graph.add_edge("intake", "search_policy") #intake 끝나면 search_policy로
+    graph.add_edge("search_policy", "decide") #search_policy 끝나면 decide로
+    graph.add_edge("decide", "execute") 
+    graph.add_edge("execute", "log")
+    graph.add_edge("log", END)
+    
     # --- 5단계: 그래프 컴파일 ---
-    # return graph.compile()
+    return graph.compile()
 
-    pass
+    
 
 
 # --- 멘토 제공: Agent 실행 함수 (수정하지 마세요) ---

@@ -10,17 +10,11 @@ class AgentState(TypedDict):
 
     # TODO: 아래 7개 필드를 정의하세요
     # ★ TypedDict 필드 정의법: 필드이름: 타입
-    #
-    # 1. user_message   → str          사용자가 입력한 메시지
-    # 2. user_id        → int          신청자 ID
-    # 3. user_info      → dict         신청자 정보 (intake 노드가 채움)
-    # 4. policy_results → list[str]    관련 정책 문서 (search_policy 노드가 채움)
-    # 5. decision       → str          판단 결과 (decide 노드가 채움)
-    # 6. reasoning      → str          판단 근거 (decide 노드가 채움)
-    # 7. actions_taken  → list[str]    실행 결과 (execute 노드가 채움)
-    #
-    # 예시:
-    #   user_message: str
-    #   user_id: int
-    #   ...
-    pass
+  
+    user_message: str        # 사용자가 채팅으로 입력한 메시지 
+    user_id: int              # 신청자 ID
+    user_info: dict           # 신청자 정보(intake 노드가 조회해서 채우는)
+    policy_results: list[str] #  관련 정책 문서(search_policy 노드가 RAG로 찾아온)
+    decision: str              # decide 노드가 내린 판단 결과 (승인/반려/에스컬레이션)
+    reasoning: str             # decide 노드가 왜 그렇게 판단했는지 판단 근거 
+    actions_taken: list[str]  # 실행 결과 (execute 노드가 실제로 실행한 MCP Tools들 기록)

@@ -10,15 +10,14 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import Base, engine
-from app.db.models import user, access_request, permission  # 모델 등록(테이블 생성에 필요)
+from app.db.models import user, access_request, permission,audit_log  # 모델 등록(테이블 생성에 필요)
 
 # TODO (3주차): audit_log 모델도 import 하세요 — 테이블 자동 생성에 필요합니다
-# 힌트: from app.db.models import audit_log
 
 from app.api import access_requests
 
 # TODO (3주차): agent 라우터도 import 하세요
-# 힌트: from app.api import agent
+from app.api import agent  # agent.py 안의 router 가져오기
 
 # 테이블 생성 — DB에 실제 표 생성함
 Base.metadata.create_all(bind=engine)
@@ -39,7 +38,7 @@ app.add_middleware(
 app.include_router(access_requests.router)
 
 # TODO (3주차): agent 라우터도 등록하세요
-# 힌트: app.include_router(agent.router)
+app.include_router(agent.router)   # /api/v1/agent/chat 엔드포인트를 앱에 연결
 
 # 접속 확인용 기본 경로
 @app.get("/")
