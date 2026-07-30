@@ -22,8 +22,8 @@ def search_policies(query: str, n_results: int = 3) -> list[dict]:
     )
     #
     # --- 2단계: 결과가 비어있으면 빈 리스트 반환 ---
-    # if not results["ids"] or not results["ids"][0]:
-    #     return []
+    if not results["ids"] or not results["ids"][0]:
+        return []
     #
     # --- 3단계: 결과 정리해서 반환 ---
     # ★ results 구조:
