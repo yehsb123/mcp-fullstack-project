@@ -19,7 +19,7 @@ def log_node(state: AgentState) -> dict:
     # ★ 내가 만든 create_audit_log() 함수를 호출하기
     create_audit_log(
         db=db,
-        request_id=0, #지금은 임시로 0-실제 request_id 연결은 나중 단계
+        request_id=None, #지금은 임시로 None-실제 request_id 연결은 나중 단계
         action=state.get("decision", "unknown"), #state에서 안전하게 꺼내기(없으면 기본값)
         decision=state.get("decision", "unknown"),
         reasoning=state.get("reasoning", ""),

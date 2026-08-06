@@ -63,3 +63,24 @@ def update_access_request(
 def get_user_permissions(user_id: int, db: Session = Depends(get_db)):
     return access_service.get_user_permissions(db, user_id)
 
+
+# 처리 이력(audit_logs) 조회 (GET) — 3주차 추가
+from app.db.models.audit_log import AuditLog
+
+@router.get("/audit-logs")
+def list_audit_logs(db: Session = Depends(get_db)):
+    logs = db.query(AuditLog).order_by(AuditLog.created_at.desc()).all()
+    return [
+        {
+            "id": log.id,
+            "request_id": log.request_id,
+            "action": log.action,
+            "decision": log.decision,
+            "reasoning": log.reasoning,
+            "policy_referenced": log.policy_referenced,
+            "decided_by": log.decided_by,
+            "created_at": str(log.created_at) if log.created_at else None,
+        }
+        for log in logs
+    ]
+

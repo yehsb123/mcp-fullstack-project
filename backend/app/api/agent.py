@@ -34,13 +34,17 @@ router = APIRouter(prefix="/api/v1", tags=["agent"])
 
 @router.post("/agent/chat", response_model=ChatResponse)
 def agent_chat(data: ChatRequest):
-    # 1단계: Agent 실행
-    from agent.graph import run_agent
-    result = run_agent(user_message=data.message, user_id=data.user_id)
-
-    # 2단계: 결과 반환
-    return ChatResponse(
-        decision=result.get("decision", ""),
-        reasoning=result.get("reasoning", ""),
-        actions_taken=result.get("actions_taken", []),
-    )
+    import traceback as tb
+    try:
+        from agent.graph import run_agent
+        result = run_agent(user_message=data.message, user_id=data.user_id)
+        return ChatResponse(
+            decision=result.get("decision", ""),
+            reasoning=result.get("reasoning", ""),
+            actions_taken=result.get("actions_taken", []),
+        )
+    except Exception as e:
+        import logging
+        logging.error(f"agent/chat error: {tb.format_exc()}")
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=500, content={"detail": str(e), "traceback": tb.format_exc()})

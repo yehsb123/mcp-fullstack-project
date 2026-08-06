@@ -3,9 +3,13 @@
 
 import os
 import json
+from dotenv import load_dotenv
 from agent.state import AgentState
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import SystemMessage, HumanMessage
+
+_env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "backend", ".env")
+load_dotenv(_env_path)
 
 PROMPT_PATH = os.path.join(os.path.dirname(__file__), "..", "prompts", "system_prompt.md")
 with open(PROMPT_PATH, "r", encoding="utf-8") as f:
@@ -16,7 +20,7 @@ def decide_node(state: AgentState) -> dict:
     """정책 기반으로 LLM이 승인/반려/에스컬레이션을 판단한다."""
 
     llm = ChatAnthropic(
-        model="claude-sonnet-4-20250514",
+        model="claude-haiku-4-5-20251001",
         api_key=os.getenv("ANTHROPIC_API_KEY"),
         max_tokens=1024,
     )

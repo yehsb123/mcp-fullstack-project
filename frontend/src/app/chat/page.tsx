@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const API_BASE = "http://localhost:8000/api/v1";
+const API_BASE = "http://localhost:8001/api/v1";
 
 // --- 멘토 제공: 타입 정의 ---
 interface ChatMessage {
@@ -31,27 +31,39 @@ export default function ChatPage() {
     setInput("");
     setLoading(true);
 
-    // TODO: 아래 2~3단계를 구현하세요
-    //
     // --- 2단계: fetch로 Agent API 호출 ---
-    const res = await fetch(`${API_BASE}/agent/chat`, { //백엔드 agent.py의 post 엔드포인트 호출 
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: messageText, //사용자가 친 메시지
-        user_id: Number(userId),//화면 상단 입력창의 user_id
-      }),
-    });
-    const data = await res.json();
-    
-    // --- 3단계: Agent 응답을 화면에 추가 ---
-    const agentMsg: ChatMessage = {
-      role: "agent",
-      content: data.reasoning,   // Agent의 판단 근거를 말풍선 본문으로
-      decision: data.decision, // 승인/반려/에스컬레이션 뱃지용
-      actions: data.actions_taken,  // 실제 실행한 작업 목록
-    };
-    setMessages((prev) => [...prev, agentMsg]);
+    try {
+      const res = await fetch(`${API_BASE}/agent/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: messageText,
+          user_id: Number(userId),
+        }),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        const agentMsg: ChatMessage = { role: "agent", content: `서버 오류 (${res.status}): ${errText}` };
+        setMessages((prev) => [...prev, agentMsg]);
+        setLoading(false);
+        return;
+      }
+
+      const data = await res.json();
+
+      // --- 3단계: Agent 응답을 화면에 추가 ---
+      const agentMsg: ChatMessage = {
+        role: "agent",
+        content: data.reasoning,
+        decision: data.decision,
+        actions: data.actions_taken,
+      };
+      setMessages((prev) => [...prev, agentMsg]);
+    } catch (err) {
+      const agentMsg: ChatMessage = { role: "agent", content: `연결 실패: 백엔드(localhost:8000)가 실행 중인지 확인하세요.` };
+      setMessages((prev) => [...prev, agentMsg]);
+    }
 
     setLoading(false);
   };
