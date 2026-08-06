@@ -37,107 +37,111 @@ export default function AdminPage() {
   }, []);
 
   const pending = requests.filter((r) => r.status === "pending");
-  const processed = requests.filter((r) => r.status !== "pending");
+  const approved = requests.filter((r) => r.status === "approved");
+  const rejected = requests.filter((r) => r.status === "rejected");
 
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto", padding: 40 }}>
-      <h1>AccessGuard - 관리자</h1>
-      <div style={{ marginBottom: 24, display: "flex", gap: 12, fontSize: 14 }}>
-        <a href="/" style={{ color: "#0070f3" }}>메인</a>
-        <a href="/chat" style={{ color: "#0070f3" }}>AI 채팅</a>
-        <a href="/pending" style={{ color: "#0070f3" }}>승인 대기</a>
-        <a href="/audit-logs" style={{ color: "#0070f3" }}>처리 이력</a>
+    <div className="page-body">
+      <h1 className="page-title">관리자 대시보드</h1>
+      <p className="page-desc">전체 권한 신청 현황을 한눈에 확인하고 처리합니다.</p>
+
+      <div className="stats-row">
+        <div className="stat-card">
+          <div className="stat-value">{requests.length}</div>
+          <div className="stat-label">전체 신청</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value" style={{ color: "var(--bi-01)" }}>{pending.length}</div>
+          <div className="stat-label">대기중</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value" style={{ color: "var(--success-modal)" }}>{approved.length}</div>
+          <div className="stat-label">승인</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value" style={{ color: "var(--failure)" }}>{rejected.length}</div>
+          <div className="stat-label">반려</div>
+        </div>
       </div>
 
-      <section style={{ marginBottom: 40 }}>
-        <h2>승인 대기 ({pending.length}건)</h2>
+      <div className="card section-gap">
+        <div className="card-title">승인 대기 ({pending.length}건)</div>
         {pending.length === 0 ? (
-          <p style={{ color: "#666" }}>대기 중인 신청이 없습니다.</p>
+          <div className="empty-state">대기 중인 신청이 없습니다.</div>
         ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ borderBottom: "2px solid #ddd" }}>
-                <th style={{ padding: 8, textAlign: "left" }}>ID</th>
-                <th style={{ padding: 8, textAlign: "left" }}>신청자</th>
-                <th style={{ padding: 8, textAlign: "left" }}>리소스</th>
-                <th style={{ padding: 8, textAlign: "left" }}>레벨</th>
-                <th style={{ padding: 8, textAlign: "left" }}>사유</th>
-                <th style={{ padding: 8, textAlign: "left" }}>신청일</th>
-                <th style={{ padding: 8, textAlign: "left" }}>처리</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pending.map((req) => (
-                <tr key={req.id} style={{ borderBottom: "1px solid #eee" }}>
-                  <td style={{ padding: 8 }}>{req.id}</td>
-                  <td style={{ padding: 8 }}>user #{req.user_id}</td>
-                  <td style={{ padding: 8 }}>{req.resource_name}</td>
-                  <td style={{ padding: 8 }}>{req.access_level}</td>
-                  <td style={{ padding: 8, maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{req.reason}</td>
-                  <td style={{ padding: 8 }}>{new Date(req.created_at).toLocaleDateString("ko-KR")}</td>
-                  <td style={{ padding: 8 }}>
-                    <div style={{ display: "flex", gap: 6 }}>
-                      <button
-                        onClick={() => handleStatusChange(req.id, "approved")}
-                        style={{ padding: "4px 12px", background: "#28a745", color: "#fff", border: "none", borderRadius: 4, cursor: "pointer", fontSize: 13 }}
-                      >
-                        승인
-                      </button>
-                      <button
-                        onClick={() => handleStatusChange(req.id, "rejected")}
-                        style={{ padding: "4px 12px", background: "#dc3545", color: "#fff", border: "none", borderRadius: 4, cursor: "pointer", fontSize: 13 }}
-                      >
-                        반려
-                      </button>
-                    </div>
-                  </td>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>신청자</th>
+                  <th>리소스</th>
+                  <th>레벨</th>
+                  <th>사유</th>
+                  <th>신청일</th>
+                  <th>처리</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {pending.map((req) => (
+                  <tr key={req.id}>
+                    <td>{req.id}</td>
+                    <td>user #{req.user_id}</td>
+                    <td style={{ fontWeight: 500 }}>{req.resource_name}</td>
+                    <td>{req.access_level}</td>
+                    <td style={{ maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{req.reason}</td>
+                    <td>{new Date(req.created_at).toLocaleDateString("ko-KR")}</td>
+                    <td>
+                      <div style={{ display: "flex", gap: 6 }}>
+                        <button className="btn btn-approve" onClick={() => handleStatusChange(req.id, "approved")}>승인</button>
+                        <button className="btn btn-reject" onClick={() => handleStatusChange(req.id, "rejected")}>반려</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
-      </section>
+      </div>
 
-      <section>
-        <h2>처리 완료 ({processed.length}건)</h2>
-        {processed.length === 0 ? (
-          <p style={{ color: "#666" }}>처리된 신청이 없습니다.</p>
+      <div className="card">
+        <div className="card-title">처리 완료 ({approved.length + rejected.length}건)</div>
+        {approved.length + rejected.length === 0 ? (
+          <div className="empty-state">처리된 신청이 없습니다.</div>
         ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ borderBottom: "2px solid #ddd" }}>
-                <th style={{ padding: 8, textAlign: "left" }}>ID</th>
-                <th style={{ padding: 8, textAlign: "left" }}>신청자</th>
-                <th style={{ padding: 8, textAlign: "left" }}>리소스</th>
-                <th style={{ padding: 8, textAlign: "left" }}>레벨</th>
-                <th style={{ padding: 8, textAlign: "left" }}>결과</th>
-                <th style={{ padding: 8, textAlign: "left" }}>신청일</th>
-              </tr>
-            </thead>
-            <tbody>
-              {processed.map((req) => (
-                <tr key={req.id} style={{ borderBottom: "1px solid #eee" }}>
-                  <td style={{ padding: 8 }}>{req.id}</td>
-                  <td style={{ padding: 8 }}>user #{req.user_id}</td>
-                  <td style={{ padding: 8 }}>{req.resource_name}</td>
-                  <td style={{ padding: 8 }}>{req.access_level}</td>
-                  <td style={{ padding: 8 }}>
-                    <span style={{
-                      padding: "2px 8px",
-                      borderRadius: 4,
-                      background: req.status === "approved" ? "#d4edda" : "#f8d7da",
-                      color: req.status === "approved" ? "#155724" : "#721c24",
-                    }}>
-                      {req.status === "approved" ? "승인" : "반려"}
-                    </span>
-                  </td>
-                  <td style={{ padding: 8 }}>{new Date(req.created_at).toLocaleDateString("ko-KR")}</td>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>신청자</th>
+                  <th>리소스</th>
+                  <th>레벨</th>
+                  <th>결과</th>
+                  <th>신청일</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {[...approved, ...rejected].map((req) => (
+                  <tr key={req.id}>
+                    <td>{req.id}</td>
+                    <td>user #{req.user_id}</td>
+                    <td style={{ fontWeight: 500 }}>{req.resource_name}</td>
+                    <td>{req.access_level}</td>
+                    <td>
+                      <span className={`badge ${req.status === "approved" ? "badge-approved" : "badge-rejected"}`}>
+                        {req.status === "approved" ? "승인" : "반려"}
+                      </span>
+                    </td>
+                    <td>{new Date(req.created_at).toLocaleDateString("ko-KR")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
-      </section>
+      </div>
     </div>
   );
 }

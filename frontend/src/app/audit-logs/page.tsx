@@ -15,6 +15,12 @@ interface AuditLog {
   created_at: string | null;
 }
 
+const DECISION: Record<string, { label: string; cls: string }> = {
+  approve: { label: "승인", cls: "badge-approved" },
+  reject: { label: "반려", cls: "badge-rejected" },
+  escalate: { label: "에스컬레이션", cls: "badge-escalate" },
+};
+
 export default function AuditLogsPage() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,91 +35,47 @@ export default function AuditLogsPage() {
     fetchLogs();
   }, []);
 
-  const decisionStyle = (decision: string) => {
-    if (decision === "approve")
-      return { background: "#d4edda", color: "#155724" };
-    if (decision === "reject")
-      return { background: "#f8d7da", color: "#721c24" };
-    return { background: "#fff3cd", color: "#856404" };
-  };
-
-  const decisionLabel = (decision: string) => {
-    if (decision === "approve") return "승인";
-    if (decision === "reject") return "반려";
-    return "에스컬레이션";
-  };
-
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto", padding: 40 }}>
-      <h1 style={{ marginBottom: 8 }}>처리 이력 조회</h1>
-      <p style={{ color: "#666", marginBottom: 24, fontSize: 14 }}>
-        Agent가 처리한 모든 판단 기록을 보여줍니다.
-      </p>
+    <div className="page-body">
+      <h1 className="page-title">처리 이력</h1>
+      <p className="page-desc">Agent가 처리한 모든 판단 기록을 보여줍니다.</p>
 
       {loading ? (
-        <p style={{ color: "#999" }}>로딩 중...</p>
+        <div className="card"><div className="empty-state">로딩 중...</div></div>
       ) : logs.length === 0 ? (
-        <p style={{ color: "#999", textAlign: "center", marginTop: 40 }}>
-          처리 이력이 없습니다. AI 채팅에서 권한 신청을 먼저 해보세요.
-        </p>
+        <div className="card">
+          <div className="empty-state">
+            <div className="empty-icon">📝</div>
+            처리 이력이 없습니다. AI 채팅에서 권한 신청을 먼저 해보세요.
+          </div>
+        </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {logs.map((log) => (
-            <div
-              key={log.id}
-              style={{
-                border: "1px solid #e0e0e0",
-                borderRadius: 8,
-                padding: 16,
-                background: "#fafafa",
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontWeight: 700, fontSize: 14 }}>
-                    #{log.id}
-                  </span>
-                  <span
-                    style={{
-                      padding: "2px 8px",
-                      borderRadius: 4,
-                      fontSize: 12,
-                      fontWeight: 700,
-                      ...decisionStyle(log.decision),
-                    }}
-                  >
-                    {decisionLabel(log.decision)}
-                  </span>
-                  <span style={{ fontSize: 12, color: "#999" }}>
-                    by {log.decided_by}
+          {logs.map((log) => {
+            const d = DECISION[log.decision] || DECISION.escalate;
+            return (
+              <div key={log.id} className="log-card">
+                <div className="log-card-header">
+                  <div className="log-card-meta">
+                    <span className="log-card-id">#{log.id}</span>
+                    <span className={`badge ${d.cls}`}>{d.label}</span>
+                    <span className="log-card-by">by {log.decided_by}</span>
+                  </div>
+                  <span className="log-card-time">
+                    {log.created_at ? new Date(log.created_at).toLocaleString("ko-KR") : "-"}
                   </span>
                 </div>
-                <span style={{ fontSize: 12, color: "#999" }}>
-                  {log.created_at
-                    ? new Date(log.created_at).toLocaleString("ko-KR")
-                    : "-"}
-                </span>
-              </div>
-              <div style={{ fontSize: 14, lineHeight: 1.6, color: "#333" }}>
-                {log.reasoning || "(판단 근거 없음)"}
-              </div>
-              {log.policy_referenced && (
-                <div style={{ fontSize: 12, color: "#666", marginTop: 4 }}>
-                  참고 정책: {log.policy_referenced}
+                <div className="log-card-body">
+                  {log.reasoning || "(판단 근거 없음)"}
                 </div>
-              )}
-            </div>
-          ))}
+                {log.policy_referenced && (
+                  <div className="log-card-policy">참고 정책: {log.policy_referenced}</div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
-
-      <div style={{ marginTop: 24 }}>
-        <a href="/" style={{ color: "#0070f3", fontSize: 14 }}>← 메인으로</a>
-        {" | "}
-        <a href="/chat" style={{ color: "#0070f3", fontSize: 14 }}>AI 채팅</a>
-        {" | "}
-        <a href="/pending" style={{ color: "#0070f3", fontSize: 14 }}>승인 대기</a>
-      </div>
     </div>
   );
 }

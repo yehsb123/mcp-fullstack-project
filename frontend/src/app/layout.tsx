@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Navigation from "@/components/Navigation";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "AccessGuard",
@@ -12,7 +14,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body style={{ margin: 0, fontFamily: "system-ui, sans-serif" }}>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        />
+      </head>
+      <body>
+        <Navigation />
         {children}
       </body>
     </html>
