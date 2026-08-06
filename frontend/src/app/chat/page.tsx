@@ -4,7 +4,6 @@ import { useState } from "react";
 
 const API_BASE = "http://localhost:8000/api/v1";
 
-// --- 멘토 제공: 타입 정의 ---
 interface ChatMessage {
   role: "user" | "agent";
   content: string;
@@ -18,20 +17,21 @@ export default function ChatPage() {
   const [userId, setUserId] = useState("1");
   const [loading, setLoading] = useState(false);
 
-  // --- 채팅 전송 (3주차) ---
-  // TODO: fetch로 POST /api/v1/agent/chat 호출
-  // ★ page.tsx의 handleSubmit과 동일한 fetch 패턴입니다!
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    // --- 멘토 제공: 사용자 메시지를 화면에 추가 ---
+    if (input.trim().length < 5) {
+      const agentMsg: ChatMessage = { role: "agent", content: "5자 이상의 구체적인 권한 신청을 입력해주세요." };
+      setMessages((prev) => [...prev, agentMsg]);
+      return;
+    }
+
     const userMsg: ChatMessage = { role: "user", content: input };
     setMessages((prev) => [...prev, userMsg]);
     const messageText = input;
     setInput("");
     setLoading(true);
 
-    // --- 2단계: fetch로 Agent API 호출 ---
     try {
       const res = await fetch(`${API_BASE}/agent/chat`, {
         method: "POST",
@@ -52,7 +52,6 @@ export default function ChatPage() {
 
       const data = await res.json();
 
-      // --- 3단계: Agent 응답을 화면에 추가 ---
       const agentMsg: ChatMessage = {
         role: "agent",
         content: data.reasoning,
@@ -68,7 +67,6 @@ export default function ChatPage() {
     setLoading(false);
   };
 
-  // --- 멘토 제공: Enter키로 전송 ---
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -76,7 +74,6 @@ export default function ChatPage() {
     }
   };
 
-  // --- 멘토 제공: UI (수정하지 마세요) 야삐!---
   return (
     <div style={{ maxWidth: 700, margin: "0 auto", padding: 40, height: "100vh", display: "flex", flexDirection: "column" }}>
       <h1 style={{ marginBottom: 8 }}>AccessGuard - AI 권한 심사</h1>

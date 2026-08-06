@@ -1,10 +1,3 @@
-# MCP Tool: 권한 신청 접수
-# 2주차에 구현
-
-# 이 Tool은 services/access_service.py의 create_request()를 호출
-# TODO: Tool 정의 (이름, 설명, 파라미터)
-# TODO: services/ 연동
-
 from app.core.database import SessionLocal
 from app.schemas.access_request import AccessRequestCreate
 from app.services import access_service
@@ -30,7 +23,7 @@ def request_access(user_id: int, resource_name: str, access_level: str, reason: 
             "reason": result.reason,
         }
     except Exception:
-        db.rollback()   
-        raise           
+        db.rollback()
+        raise
     finally:
         db.close()

@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from "react";
 
-// FastAPI 백엔드 주소
 const API_BASE = "http://localhost:8000/api/v1";
 
-// --- 타입 정의 ---
 interface AccessRequest {
   id: number;
   user_id: number;
@@ -17,27 +15,22 @@ interface AccessRequest {
 }
 
 export default function Home() {
-  // --- 상태 ---
   const [requests, setRequests] = useState<AccessRequest[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 폼 입력값
   const [userId, setUserId] = useState("");
   const [resourceName, setResourceName] = useState("");
   const [accessLevel, setAccessLevel] = useState("read");
   const [reason, setReason] = useState("");
 
-  // --- 신청 목록 조회 ---
   const fetchRequests = async () => {
     const res = await fetch(`${API_BASE}/access-requests`);
     const data = await res.json();
     setRequests(data);
   };
 
-  // --- 권한 신청 ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setLoading(true);
 
     await fetch(`${API_BASE}/access-requests`, {
@@ -57,31 +50,23 @@ export default function Home() {
     await fetchRequests();
   };
 
-  // --- 승인/반려 처리 (2주차) ---
-  // TODO: fetch로 PATCH /api/v1/access-requests/{id} 호출
-  // 힌트: fetch(`${API_BASE}/access-requests/${requestId}`, { method: "PATCH", headers: {...}, body: JSON.stringify({ status: newStatus }) })
   const handleStatusChange = async (requestId: number, newStatus: string) => {
-    // TODO: 여기에 fetch PATCH 코드 작성
     await fetch(`${API_BASE}/access-requests/${requestId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: newStatus }),
     });
-
     await fetchRequests();
   };
 
-  // 페이지 로드 시 목록 조회
   useEffect(() => {
     fetchRequests();
   }, []);
 
-  // --- UI (멘토 제공) ---
   return (
     <div style={{ maxWidth: 800, margin: "0 auto", padding: 40 }}>
       <h1>AccessGuard - 권한 신청</h1>
 
-      {/* 신청 폼 */}
       <section style={{ marginBottom: 40, padding: 24, border: "1px solid #ddd", borderRadius: 8 }}>
         <h2>새 권한 신청</h2>
         <form onSubmit={handleSubmit}>
@@ -139,7 +124,6 @@ export default function Home() {
         </form>
       </section>
 
-      {/* 네비게이션 */}
       <div style={{ marginBottom: 24, display: "flex", gap: 12, fontSize: 14 }}>
         <a href="/chat" style={{ color: "#0070f3" }}>AI 채팅</a>
         <a href="/admin" style={{ color: "#0070f3" }}>관리자</a>
@@ -147,7 +131,6 @@ export default function Home() {
         <a href="/audit-logs" style={{ color: "#0070f3" }}>처리 이력</a>
       </div>
 
-      {/* 신청 목록 */}
       <section>
         <h2>신청 목록</h2>
         {requests.length === 0 ? (

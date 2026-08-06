@@ -23,16 +23,12 @@ export default function AdminPage() {
     setRequests(data);
   };
 
-  // --- 승인/반려 처리 (2주차) ---
-  // TODO: fetch로 PATCH /api/v1/access-requests/{id} 호출
-  // 힌트: fetch(`${API_BASE}/access-requests/${requestId}`, { method: "PATCH", headers: {...}, body: JSON.stringify({ status: newStatus }) })
   const handleStatusChange = async (requestId: number, newStatus: string) => {
     await fetch(`${API_BASE}/access-requests/${requestId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: newStatus }),
     });
-
     await fetchRequests();
   };
 
@@ -53,7 +49,6 @@ export default function AdminPage() {
         <a href="/audit-logs" style={{ color: "#0070f3" }}>처리 이력</a>
       </div>
 
-      {/* 승인 대기 */}
       <section style={{ marginBottom: 40 }}>
         <h2>승인 대기 ({pending.length}건)</h2>
         {pending.length === 0 ? (
@@ -103,7 +98,6 @@ export default function AdminPage() {
         )}
       </section>
 
-      {/* 처리 완료 */}
       <section>
         <h2>처리 완료 ({processed.length}건)</h2>
         {processed.length === 0 ? (
