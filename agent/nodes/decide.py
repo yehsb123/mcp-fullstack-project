@@ -43,10 +43,16 @@ def decide_node(state: AgentState) -> dict:
 
 위 정보를 바탕으로 이 권한 신청을 심사해주세요. JSON으로만 응답하세요."""
 
-    response = llm.invoke([
-        SystemMessage(content=SYSTEM_PROMPT),
-        HumanMessage(content=human_message),
-    ])
+    try:
+        response = llm.invoke([
+            SystemMessage(content=SYSTEM_PROMPT),
+            HumanMessage(content=human_message),
+        ])
+    except Exception as e:
+        return {
+            "decision": "escalate",
+            "reasoning": f"AI 판단 서비스 오류 — 관리자 수동 검토 필요 ({type(e).__name__})",
+        }
 
     try:
         content = response.content
@@ -59,6 +65,6 @@ def decide_node(state: AgentState) -> dict:
         reasoning = result.get("reasoning", "판단 근거 파싱 실패")
     except (json.JSONDecodeError, AttributeError, IndexError):
         decision = "escalate"
-        reasoning = f"LLM 응답 파싱 실패, 안전을 위해 에스컬레이션"
+        reasoning = "LLM 응답 파싱 실패, 안전을 위해 에스컬레이션"
 
     return {"decision": decision, "reasoning": reasoning}

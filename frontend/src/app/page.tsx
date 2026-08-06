@@ -139,6 +139,14 @@ export default function Home() {
         </form>
       </section>
 
+      {/* 네비게이션 */}
+      <div style={{ marginBottom: 24, display: "flex", gap: 12, fontSize: 14 }}>
+        <a href="/chat" style={{ color: "#0070f3" }}>AI 채팅</a>
+        <a href="/admin" style={{ color: "#0070f3" }}>관리자</a>
+        <a href="/pending" style={{ color: "#0070f3" }}>승인 대기</a>
+        <a href="/audit-logs" style={{ color: "#0070f3" }}>처리 이력</a>
+      </div>
+
       {/* 신청 목록 */}
       <section>
         <h2>신청 목록</h2>

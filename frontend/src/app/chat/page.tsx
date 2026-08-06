@@ -149,6 +149,13 @@ export default function ChatPage() {
         )}
       </div>
 
+      {/* 네비게이션 */}
+      <div style={{ marginBottom: 12, display: "flex", gap: 12, fontSize: 14 }}>
+        <a href="/" style={{ color: "#0070f3" }}>메인</a>
+        <a href="/pending" style={{ color: "#0070f3" }}>승인 대기</a>
+        <a href="/audit-logs" style={{ color: "#0070f3" }}>처리 이력</a>
+      </div>
+
       {/* 입력 영역 */}
       <div style={{ display: "flex", gap: 8 }}>
         <input
