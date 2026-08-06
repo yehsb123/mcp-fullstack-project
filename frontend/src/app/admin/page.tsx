@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-const API_BASE = "http://localhost:8001/api/v1";
+const API_BASE = "http://localhost:8000/api/v1";
 
 interface AccessRequest {
   id: number;

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 
 // FastAPI 백엔드 주소
-const API_BASE = "http://localhost:8001/api/v1";
+const API_BASE = "http://localhost:8000/api/v1";
 
 // --- 타입 정의 ---
 interface AccessRequest {
