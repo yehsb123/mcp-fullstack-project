@@ -1,3 +1,6 @@
+# 판단 노드 — Agent 파이프라인 3번째 단계
+# 3주차 — 멘토 제공 (LLM 호출 로직)
+
 import os
 import json
 from dotenv import load_dotenv

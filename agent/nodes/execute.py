@@ -1,3 +1,6 @@
+# 실행 노드 — Agent 파이프라인 4번째 단계
+# 3주차 — 멘토 제공 (분기 로직)
+
 from agent.state import AgentState
 from app.core.database import SessionLocal
 from app.services import access_service
