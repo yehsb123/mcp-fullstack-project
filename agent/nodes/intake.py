@@ -28,7 +28,10 @@ def intake_node(state: AgentState) -> dict:
     # --- 4단계: DB 세션 닫기 ---
     db.close()
 
-    # --- 4-1단계: 미등록 사용자 예외 처리 ---
+    # [4주차 TODO] 미등록 사용자 예외 처리
+    # ★ user가 None이면 DB에 없는 사용자 = 즉시 reject 처리
+    # ★ decision을 "reject"로 세팅하면 graph.py의 조건부 엣지에서
+    #   search_policy를 건너뛰고 바로 execute로 가게 됨
     if user is None:
         return {
             "user_info": {},

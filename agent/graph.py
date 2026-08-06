@@ -34,6 +34,11 @@ def build_graph():
     # --- 4단계: 엣지 연결 (조건부 엣지 포함) ---
     # ★ add_edge("A", "B") = A 끝나면 B 실행
     # ★ add_conditional_edges = 조건에 따라 다른 노드로 분기
+
+    # [4주차 TODO] 조건부 엣지 구현하기
+    # intake 노드에서 미등록 사용자면 → 바로 execute로 (정책 검색 스킵)
+    # 정상 사용자면 → search_policy로 이동
+    # ★ 왜? 존재하지 않는 유저한테 정책 검색해봤자 의미 없으니까 바로 반려 처리
     def after_intake(state: AgentState):
         if state.get("decision") == "reject":
             return "execute"
