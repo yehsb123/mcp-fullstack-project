@@ -31,16 +31,16 @@ LangGraph Agent (그래프 기반 워크플로우)
   │                                          ▼
   │                                      [로그 기록]
   │
-  └── LangGraph Tool (MCP Tool을 래핑) ──→ MCP Server ──→ services/ ──→ PostgreSQL
+  └── 각 노드가 services/ 레이어를 직접 호출 ──→ PostgreSQL
         │
-        │  LangGraph는 MCP를 직접 호출하지 않음.
-        │  MCP Tool을 LangGraph Tool로 래핑해서 등록하면,
-        │  LLM이 필요할 때 자동으로 선택해서 호출함.
+        │  현재 구조에서 Agent 노드는 services/를 직접 import하여 호출.
+        │  MCP Server는 별도로 존재하지만, Agent 파이프라인과는 독립 동작.
+        │  (4주차에서 MCP Tool → LangGraph Tool 래핑 연동 예정)
         │
-        ├── request_access_tool  (← MCP request_access 래핑)
-        ├── check_access_tool    (← MCP check_access 래핑)
-        ├── approve_access_tool  (← MCP approve_access 래핑)
-        └── notify_tool          (← MCP send_notification 래핑)
+        ├── user_service        → 신청자 정보 조회
+        ├── access_request_service → 신청 접수/상태 변경
+        ├── audit_log_service   → 판단 이력 기록
+        └── notification_service → 알림 발송
 ```
 
 ### 호출 흐름 요약
@@ -50,12 +50,12 @@ LangGraph Agent (그래프 기반 워크플로우)
 2. Next.js → FastAPI `/api/v1/agent/chat` 엔드포인트 호출 (fetch)
 3. FastAPI가 LangGraph Agent 실행
 4. LangGraph가 그래프 노드를 순서대로 실행:
-   a. 신청 접수 노드 → MCP Tool(check_access)로 신청자 정보 조회
+   a. 신청 접수 노드 → services/(user_service)로 신청자 정보 조회
    b. 정책 검색 노드 → RAG(ChromaDB)에서 관련 보안 정책 검색
    c. 판단 노드 → LLM이 정책 기반으로 승인/조건부/에스컬레이션 결정
-   d. 실행 노드 → MCP Tool(approve_access, send_notification) 호출
-   e. 로깅 노드 → 판단 과정 전체를 audit_logs에 기록
-5. MCP Server의 각 Tool이 services/ 레이어를 통해 PostgreSQL에 접근
+   d. 실행 노드 → services/(access_request_service)로 신청 처리
+   e. 로깅 노드 → services/(audit_log_service)로 판단 과정 기록
+5. services/ 레이어가 SQLAlchemy ORM을 통해 PostgreSQL에 접근
 6. 결과가 역순으로 사용자에게 반환
 ```
 
@@ -213,7 +213,7 @@ mcp-fullstack-project/
 **목표**: 전체 흐름 안정화 + Agent 판단 품질 향상 + 데모 가능 상태
 
 **체크리스트:**
-- [ ] 전체 E2E 흐름 테스트 (Next.js → FastAPI → Agent → MCP → DB → 화면)
+- [ ] 전체 E2E 흐름 테스트 (Next.js → FastAPI → Agent → services → DB → 화면)
 - [ ] 엣지 케이스 처리 (잘못된 신청, 중복 신청, 권한 만료 등)
 - [ ] Agent 멀티턴 대화 보완 (추가 질문, 확인 요청)
 - [ ] 프롬프트 튜닝 (판단 정확도 개선)
