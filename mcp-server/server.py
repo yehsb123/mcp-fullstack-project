@@ -1,7 +1,18 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "backend"))
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+BACKEND_DIR = os.path.join(PROJECT_ROOT, "..", "backend")
+
+sys.path.insert(0, BACKEND_DIR)
+
+from dotenv import load_dotenv
+load_dotenv(os.path.join(BACKEND_DIR, ".env"))
+
+import app.db.models.user
+import app.db.models.access_request
+import app.db.models.permission
+import app.db.models.audit_log
 
 from mcp.server.fastmcp import FastMCP
 from tools.request_access import request_access
