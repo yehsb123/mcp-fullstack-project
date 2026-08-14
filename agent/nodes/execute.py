@@ -16,6 +16,11 @@ def execute_node(state: AgentState) -> dict:
     reasoning = state.get("reasoning", "")
     actions_taken = []
 
+    # 미등록 사용자면 DB 저장 없이 바로 반려 메시지만
+    if not state.get("user_info"):
+        actions_taken.append("미등록 사용자 — 신청 기록 없이 반려 처리")
+        return {"actions_taken": actions_taken}
+
     db = SessionLocal()
     try:
         data = AccessRequestCreate(
